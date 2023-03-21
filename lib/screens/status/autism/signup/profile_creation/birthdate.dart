@@ -1,0 +1,133 @@
+import 'package:flutter/material.dart';
+import '../../../../../widgets/color_constants.dart';
+import '../../../../authentication.dart';
+import '../signing_up/signup.dart';
+import 'education_lvl.dart';
+
+class BirthDate extends StatefulWidget {
+  @override
+  _BirthDateState createState() => _BirthDateState();
+}
+
+class _BirthDateState extends State<BirthDate> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: ColorConstants.blueDark,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(height: 100),
+          Container(
+            alignment: Alignment.center,
+            child: Image.asset('assets/logoApp.png'),
+            height: 160,
+          ),
+          SizedBox(height: 10),
+
+          // birthdate title
+          Container(
+            child: Column(
+              children: [
+                Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        "Votre date de naissance :",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        "Seul l'âge sera communiqué",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w100,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+
+
+          // birthdate scroller
+          Container(
+
+          ),
+
+          // next and back buttons
+          Container(
+            child: Column(
+              children: [
+                SizedBox(
+                  width: 200,
+                  height: 40,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                side: BorderSide(color: Colors.white)
+                            )
+                        )
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => EducationLvl()),
+                      );
+                    },
+                    child: const Text(
+                      'Suivant',
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 18),
+
+
+                SizedBox(
+                  width: 200,
+                  height: 40,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(ColorConstants.blueDark),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(color: Colors.white)
+                          ),
+                        )
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Précédent',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+}
