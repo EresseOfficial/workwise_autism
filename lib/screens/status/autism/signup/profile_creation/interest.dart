@@ -10,7 +10,7 @@ class Interest extends StatefulWidget {
 }
 
 class _InterestState extends State<Interest> {
-  List<String> items = ['Informatique', 'Musique', 'Comptabilité', 'Jeux vidéo', 'Films'];
+  List<String> items = ['Informatique', 'Musique', 'Comptabilité', 'Jeux vidéo', 'Cinéma et télevision', 'Lecture / Littérature', 'Arts plastiques', 'Photographie', 'Théâtre / Comédie', 'Danse', 'Cuisine / Pâtisserie', 'Sports', 'Activités de plein air', 'Voyages / Tourisme', 'Animaux / Soins aux animaux', 'Jardinage / Horticulture', 'Bricolage / Travaux manuels', 'Mode / Beauté', 'Histoire', 'Sciences', 'Langues étrangères', 'Méditation / Yoga', 'Collections (timbres, pièces...)', 'Jeux de société / Cartes', 'Podcasts / Radio', 'Écriture (poésie, romans...)'];
   String? selectedItem = 'Informatique';
 
   @override

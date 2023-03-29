@@ -3,12 +3,48 @@ import '../../../../profile_management/login/login.dart';
 import 'mail_confirm.dart';
 import '../../../../../widgets/color_constants.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
+final emailController = TextEditingController();
+final passwordController = TextEditingController();
+final confirmPasswordController = TextEditingController();
+
+void sendVerificationEmail() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user != null && !user.emailVerified) {
+    await user.sendEmailVerification();
+  }
+}
+
+Future<void> registerUser(String email, String password) async {
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+    print('User registered: ${userCredential.user}');
+    sendVerificationEmail();
+  } on FirebaseAuthException catch (e) {
+    print('Error: $e');
+  }
+}
+
+// bool password
+bool _obscurePassword = true;
+bool _obscureConfirmPassword = true;
+
+// bool load
+bool _isLoading = false;
+
 class Signup extends StatefulWidget {
   @override
   _SignupState createState() => _SignupState();
 }
 
 class _SignupState extends State<Signup> {
+  bool _isLoading = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +80,7 @@ class _SignupState extends State<Signup> {
                 Container(
                   width: 300,
                   child: TextField(
+                    controller: emailController,
                     decoration: InputDecoration(
                       hintText: "E-mail",
                       hintStyle: TextStyle(
@@ -58,6 +95,8 @@ class _SignupState extends State<Signup> {
                 Container(
                   width: 300,
                   child: TextField(
+                    obscureText: _obscurePassword,
+                    controller: passwordController,
                     decoration: InputDecoration(
                         hintText: "Mot de passe",
                         hintStyle: TextStyle(
@@ -65,6 +104,17 @@ class _SignupState extends State<Signup> {
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
                         ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -72,12 +122,25 @@ class _SignupState extends State<Signup> {
                 Container(
                   width: 300,
                   child: TextField(
+                    obscureText: _obscureConfirmPassword,
+                    controller: confirmPasswordController,
                     decoration: InputDecoration(
                       hintText: "Confirmation du mot de passe",
                       hintStyle: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
                       ),
                     ),
                   ),
@@ -92,10 +155,15 @@ class _SignupState extends State<Signup> {
             height: 50,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => MailConfirm()),
-                );
+                if (passwordController.text == confirmPasswordController.text) {
+                  registerUser(emailController.text, passwordController.text);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => MailConfirm()),
+                  );
+                } else {
+                  // Afficher un message d'erreur pour informer l'utilisateur que les mots de passe ne correspondent pas
+                }
               },
               child: Text(
                 "S'inscrire",

@@ -3,8 +3,19 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../widgets/color_constants.dart';
 import 'profile_management/signup/status.dart';
 import 'profile_management/login/login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+Future<void> updateUserEducationLevel(String uid, int educationLevel) async {
+  await FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .update({'educationLevel': educationLevel});
+}
+
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
+
+FirebaseFirestore db = FirebaseFirestore.instance;
 
 class Authentication extends StatefulWidget {
   @override

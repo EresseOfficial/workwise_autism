@@ -13,6 +13,39 @@ class Status extends StatefulWidget {
 }
 
 class _StatusState extends State<Status> {
+  int? _selectedStatus;
+
+  void _setStatus(int value) {
+    setState(() {
+      _selectedStatus = value;
+    });
+  }
+
+  void _navigateToNextPage(BuildContext context) {
+    switch (_selectedStatus) {
+      case 1:
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => autism_signup.Signup()),
+        );
+        break;
+      case 2:
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => maybe_with_autism.Signup()),
+        );
+        break;
+      case 3:
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => job_company.Company()),
+        );
+        break;
+      case 4:
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => family_signup.Signup()),
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,12 +104,11 @@ class _StatusState extends State<Status> {
                   children: [
                     Radio(
                       value: 1,
-                      groupValue: 1,
-                      onChanged: (value) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => autism_signup.Signup()),
-                        );
+                      groupValue: _selectedStatus,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedStatus = value;
+                        });
                       },
                     ),
                     Text(
@@ -95,12 +127,11 @@ class _StatusState extends State<Status> {
                   children: [
                     Radio(
                       value: 2,
-                      groupValue: 1,
-                      onChanged: (value) {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => maybe_with_autism.Signup())
-                        );
+                      groupValue: _selectedStatus,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedStatus = value;
+                        });
                       },
                     ),
                     Text(
@@ -119,12 +150,11 @@ class _StatusState extends State<Status> {
                   children: [
                     Radio(
                       value: 3,
-                      groupValue: 1,
-                      onChanged: (value) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => job_company.Company())
-                        );
+                      groupValue: _selectedStatus,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedStatus = value;
+                        });
                       },
                     ),
                     Text(
@@ -143,12 +173,11 @@ class _StatusState extends State<Status> {
                   children: [
                     Radio(
                       value: 4,
-                      groupValue: 1,
-                      onChanged: (value) {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => family_signup.Signup())
-                        );
+                      groupValue: _selectedStatus,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedStatus = value;
+                        });
                       },
                     ),
                     Text(
@@ -182,10 +211,32 @@ class _StatusState extends State<Status> {
                         )
                     ),
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => autism_signup.Signup()),
-                      );
+                      if (_selectedStatus != null) {
+                        switch (_selectedStatus) {
+                          case 1:
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => autism_signup.Signup(),
+                            ));
+                            break;
+                          case 2:
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => maybe_with_autism.Signup(),
+                            ));
+                            break;
+                          case 3:
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => job_company.Company(),
+                            ));
+                            break;
+                          case 4:
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => family_signup.Signup(),
+                            ));
+                            break;
+                          default:
+                            break;
+                        }
+                      }
                     },
                     child: const Text(
                       'Suivant',
@@ -193,6 +244,7 @@ class _StatusState extends State<Status> {
                     ),
                   ),
                 ),
+
                 SizedBox(height: 18),
 
 

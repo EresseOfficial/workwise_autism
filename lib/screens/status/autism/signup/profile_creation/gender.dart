@@ -4,12 +4,30 @@ import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
 import 'birthdate.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+
+Future<void> updateUserGender(int gender) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .update({'gender': gender});
+  }
+}
+
+
+
 class Gender extends StatefulWidget {
   @override
   _GenderState createState() => _GenderState();
 }
 
 class _GenderState extends State<Gender> {
+  int? selectedGender;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,8 +66,12 @@ class _GenderState extends State<Gender> {
                   children: [
                     Radio(
                       value: 1,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: selectedGender,
+                      onChanged: (int? value) {
+                        setState(() {
+                          selectedGender = value;
+                        });
+                      },
                     ),
                     Text(
                       "Un homme",
@@ -66,8 +88,12 @@ class _GenderState extends State<Gender> {
                   children: [
                     Radio(
                       value: 2,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: selectedGender,
+                      onChanged: (int? value) {
+                        setState(() {
+                          selectedGender = value;
+                        });
+                      },
                     ),
                     Text(
                       "Une femme",
@@ -102,6 +128,9 @@ class _GenderState extends State<Gender> {
                         )
                     ),
                     onPressed: () {
+                      if (selectedGender != null) {
+                        updateUserGender(selectedGender!);
+                      }
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) => BirthDate()),

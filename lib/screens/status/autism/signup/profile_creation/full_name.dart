@@ -4,6 +4,35 @@ import '../../../../../widgets/color_constants.dart';
 import '../../../../profile_management/signup/status.dart';
 import 'gender.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final TextEditingController firstNameController = TextEditingController();
+final TextEditingController lastNameController = TextEditingController();
+
+
+Future<void> saveFullName(String lastName, String firstName) async {
+  User? user = FirebaseAuth.instance.currentUser;
+
+  if (user != null) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    try {
+      await users.doc(user.uid).set({
+        'lastName': lastName,
+        'firstName': firstName,
+      }, SetOptions(merge: true));
+      print('Full name saved: $lastName $firstName');
+    } catch (e) {
+      print('Error saving full name: $e');
+    }
+  }
+}
+
+final TextEditingController _lastNameController = TextEditingController();
+final TextEditingController _firstNameController = TextEditingController();
+
+
+
 class Fullname extends StatefulWidget {
   @override
   _FullnameState createState() => _FullnameState();
@@ -46,6 +75,7 @@ class _FullnameState extends State<Fullname> {
                 Container(
                   width: 300,
                   child: TextField(
+                    controller: _lastNameController,
                     decoration: InputDecoration(
                       hintText: "Nom",
                       hintStyle: TextStyle(
@@ -60,6 +90,7 @@ class _FullnameState extends State<Fullname> {
                 Container(
                   width: 300,
                   child: TextField(
+                    controller: _firstNameController,
                     decoration: InputDecoration(
                         hintText: "Prénom",
                         hintStyle: TextStyle(
@@ -80,6 +111,7 @@ class _FullnameState extends State<Fullname> {
             height: 50,
             child: ElevatedButton(
               onPressed: () {
+                saveFullName(_lastNameController.text, _firstNameController.text);
                 Navigator.of(context).push(
                   MaterialPageRoute(
                       builder: (context) => Gender()),

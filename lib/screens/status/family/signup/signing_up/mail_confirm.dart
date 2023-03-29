@@ -4,6 +4,17 @@ import '../profile_creation/full_name.dart' as family_fullname;
 import '../../../../../widgets/color_constants.dart';
 import '../../../../profile_management/signup/status.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
+Stream<bool> checkEmailVerificationStream() async* {
+  User? user = FirebaseAuth.instance.currentUser;
+  await for (var _ in Stream.periodic(Duration(seconds: 5))) {
+    await user?.reload();
+    user = FirebaseAuth.instance.currentUser;
+    yield user?.emailVerified ?? false;
+  }
+}
+
 class MailConfirm extends StatefulWidget {
   @override
   _MailConfirmState createState() => _MailConfirmState();
@@ -14,107 +25,89 @@ class _MailConfirmState extends State<MailConfirm> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.yellow,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(height: 100),
-          Container(
-            alignment: Alignment.center,
-            child: Image.asset('assets/logoApp.png'),
-            height: 160,
-          ),
-          SizedBox(height: 10),
+      body: StreamBuilder<bool>(
+        stream: checkEmailVerificationStream(),
+        builder: (context, snapshot) {
+          if (snapshot.data == true) {
+            WidgetsBinding.instance?.addPostFrameCallback((_) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => family_fullname.Fullname()),
+              );
+            });
+          }
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: 100),
+              Container(
+                alignment: Alignment.center,
+                child: Image.asset('assets/logoApp.png'),
+                height: 160,
+              ),
+              SizedBox(height: 10),
 
-          // verify email address section
-          Container(
-            child: Column(
-              children: [
-                Text(
-                  "Vérifiez votre adresse e-mail",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                  ),
-                )
-              ],
-            ),
-          ),
-          SizedBox(height: 10),
-          Container(
-            child: Column(
-              children: [
-                Container(
-                  child: Column(
-                    children: [
-                      Text(
-                        "Nous avons envoyé un e-mail de vérification sur votre adresse e-mail renseigné précedemment. \nPour activer votre compte, veuillez consulter votre adresse e-mail, et cliquez sur le lien d’activation. N’hésitez pas à regarder vos spams. \nVous passerez sur la page suivante automatiquement une fois que votre compte sera activé pour finaliser votre inscription.",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                        ),
+              // verify email address section
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Vérifiez votre adresse e-mail",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
                       ),
-                      SizedBox(
-                        width: 200,
-                        height: 40,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                side: BorderSide(color: Colors.white)
-                              )
-                            )
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => family_fullname.Fullname()),
-                            );
-                          },
-                          child: const Text(
-                            "Ouvrir le mail",
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Column(
+                        children: [
+                          Text(
+                            "Nous avons envoyé un e-mail de vérification sur votre adresse e-mail renseigné précedemment. \nPour activer votre compte, veuillez consulter votre adresse e-mail, et cliquez sur le lien d’activation. N’hésitez pas à regarder vos spams. \nVous passerez sur la page suivante automatiquement une fois que votre compte sera activé pour finaliser votre inscription.",
                             style: TextStyle(
-                              fontSize: 20,
                               color: Colors.black,
+                              fontSize: 15,
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-
-
-                      SizedBox(
-                        width: 200,
-                        height: 40,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(ColorConstants.blueDark),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                    side: BorderSide(color: Colors.white)
-                                ),
-                              )
+                          SizedBox(height: 10),
+                          SizedBox(
+                            width: 200,
+                            height: 40,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(ColorConstants.blueDark),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        side: BorderSide(color: Colors.white)
+                                    ),
+                                  )
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text(
+                                'Fermer',
+                                style: TextStyle(fontSize: 20, color: Colors.white),
+                              ),
+                            ),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(
-                            'Fermer',
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      )
     );
   }
 }
