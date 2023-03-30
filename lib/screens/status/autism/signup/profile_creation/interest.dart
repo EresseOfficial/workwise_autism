@@ -6,13 +6,16 @@ import 'profile_customization.dart';
 
 import 'package:flutter_tags/flutter_tags.dart';
 
+TextEditingController _customInterestController = TextEditingController();
+
+
 class Interest extends StatefulWidget {
   @override
   _InterestState createState() => _InterestState();
 }
 
 class _InterestState extends State<Interest> {
-  List<String> items = [
+  List<String> _selectedInterests = [
     'Informatique',
     'Musique',
     'Comptabilité',
@@ -40,9 +43,15 @@ class _InterestState extends State<Interest> {
     'Podcasts / Radio',
     'Écriture (poésie, romans...)'
   ];
+  List<String> _chosenInterests = [];
   String? selectedItem = 'Informatique';
 
   @override
+  void dispose() {
+    _customInterestController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.blueDark,
@@ -80,21 +89,77 @@ class _InterestState extends State<Interest> {
           // dropdown button
           Container(
             child: DropdownButton<String>(
-              value: selectedItem,
-              items: items
-                .map((item) => DropdownMenuItem<String>(
+              hint: Text('Sélectionnez un centre d\'intérêt'),
+              value: null,
+              items: _selectedInterests
+                  .map((item) => DropdownMenuItem<String>(
                 value: item,
                 child: Text(item, style: TextStyle(fontSize: 24)),
               ))
                   .toList(),
-              onChanged: (item) => setState(() => selectedItem = item),
+              onChanged: (item) {
+                if (item != null && !_chosenInterests.contains(item)) {
+                  setState(() {
+                    _chosenInterests.add(item);
+                  });
+                }
+              },
             ),
           ),
 
-          // interest hashtags
-          Container(
 
+
+
+          // custom interest input
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              controller: _customInterestController,
+              onSubmitted: (value) {
+                if (value.isNotEmpty) {
+                  setState(() {
+                    _chosenInterests.add(value);
+                    _customInterestController.clear();
+                  });
+                }
+              },
+              decoration: InputDecoration(
+                labelText: 'Ajouter un centre d\'intérêt personnalisé',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
           ),
+
+
+          // chosen interest hashtags
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Tags(
+              itemCount: _chosenInterests.length,
+              itemBuilder: (index) {
+                return ItemTags(
+                  index: index,
+                  title: _chosenInterests[index],
+                  combine: ItemTagsCombine.withTextBefore,
+                  onPressed: (item) {
+                    if (item != null) {
+                      setState(() {
+                        _chosenInterests.removeAt(item.index);
+                      });
+                    }
+                  },
+                  active: true,
+                  textActiveColor: Colors.white,
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(8),
+                );
+              },
+            ),
+          ),
+
+
 
           // next and back buttons
           Container(
