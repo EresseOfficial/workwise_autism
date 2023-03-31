@@ -24,6 +24,18 @@ Future<void> updateUserInterests(String uid, List<String> interests) async {
       .catchError((error) => print("Failed to update user interests: $error"));
 }
 
+
+// adding hypersensitivities to user in firestore
+Future<void> updateUserHypersensitivities(String uid, List<String> hypersensitivities) async {
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+  return users
+      .doc(uid)
+      .update({'hypersensitivities': hypersensitivities})
+      .then((value) => print("User hypersensitivities updated"))
+      .catchError((error) => print("Failed to update user hypersensitivities: $error"));
+}
+
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
 FirebaseFirestore db = FirebaseFirestore.instance;

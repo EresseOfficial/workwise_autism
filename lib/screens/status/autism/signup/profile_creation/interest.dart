@@ -3,6 +3,7 @@ import '../../../../../widgets/color_constants.dart';
 import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
 import 'profile_customization.dart';
+import 'hypersensitivity.dart';
 
 import 'package:flutter_tags/flutter_tags.dart';
 
@@ -185,7 +186,8 @@ class _InterestState extends State<Interest> {
                       await updateUserInterests(widget.uid, _chosenInterests);
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => ProfileCustomization()),
+                          builder: (context) => Hypersensitivity(uid: widget.uid),
+                        ),
                       );
                     },
                     child: const Text(
