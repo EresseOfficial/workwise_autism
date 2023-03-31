@@ -263,7 +263,7 @@ class _EducationLvlState extends State<EducationLvl> {
                       print("Niveau de scolarité sélectionné : $_selectedEducationLvl");
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => Interest()),
+                            builder: (context) => Interest(uid: FirebaseAuth.instance.currentUser!.uid)),
                       );
                     },
                     child: const Text(

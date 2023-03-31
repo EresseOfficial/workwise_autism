@@ -5,6 +5,7 @@ import 'profile_management/signup/status.dart';
 import 'profile_management/login/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// adding education level to user in firestore
 Future<void> updateUserEducationLevel(String uid, int educationLevel) async {
   await FirebaseFirestore.instance
       .collection('users')
@@ -12,6 +13,16 @@ Future<void> updateUserEducationLevel(String uid, int educationLevel) async {
       .update({'educationLevel': educationLevel});
 }
 
+// adding interests to user in firestore
+Future<void> updateUserInterests(String uid, List<String> interests) async {
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+  return users
+      .doc(uid)
+      .update({'interests': interests})
+      .then((value) => print("User interests updated"))
+      .catchError((error) => print("Failed to update user interests: $error"));
+}
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
 

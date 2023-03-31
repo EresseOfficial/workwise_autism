@@ -10,6 +10,9 @@ TextEditingController _customInterestController = TextEditingController();
 
 
 class Interest extends StatefulWidget {
+  final String uid;
+
+  Interest({required this.uid});
   @override
   _InterestState createState() => _InterestState();
 }
@@ -178,7 +181,8 @@ class _InterestState extends State<Interest> {
                             )
                         )
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      await updateUserInterests(widget.uid, _chosenInterests);
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) => ProfileCustomization()),
