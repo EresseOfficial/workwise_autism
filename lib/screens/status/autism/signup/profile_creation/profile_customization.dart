@@ -4,9 +4,14 @@ import '../../../../../widgets/color_constants.dart';
 import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
 
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+
 
 class ProfileCustomization extends StatefulWidget {
   @override
@@ -14,9 +19,37 @@ class ProfileCustomization extends StatefulWidget {
 }
 
 class _ProfileCustomizationState extends State<ProfileCustomization> {
+
+  // controllers
+  final TextEditingController _bioController = TextEditingController();
+
+  // storing user info in firestore
+  Future<void> _storeUserInfo() async {
+    if (_image != null) {
+      String? imageURL;
+      String fileName = FirebaseAuth.instance.currentUser!.uid;
+      Reference storageRef = FirebaseStorage.instance.ref().child('profile_pictures/$fileName');
+      UploadTask uploadTask = storageRef.putFile(_image!);
+      TaskSnapshot taskSnapshot = await uploadTask;
+      imageURL = await taskSnapshot.ref.getDownloadURL();
+
+      await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set({
+        'bio': _bioController.text,
+        'profile_picture': imageURL,
+      });
+    } else {
+      await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set({
+        'bio': _bioController.text,
+        'profile_picture': null,
+      });
+    }
+  }
+
+  // image picker
   File? _image;
   final ImagePicker _picker = ImagePicker();
 
+  // function to get image from gallery
   Future<void> _getImage() async {
     final pickedFile = await _picker.getImage(source: ImageSource.gallery);
 
@@ -70,7 +103,14 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
             alignment: Alignment.center,
             child: _image == null
                 ? Image.asset('assets/logoApp.png')
-                : Image.file(_image!),
+                : ClipOval(
+              child: Image.file(
+                _image!,
+                fit: BoxFit.cover,
+                height: 160,
+                width: 160,
+              ),
+            ),
             height: 160,
           ),
           SizedBox(height: 10),
@@ -121,6 +161,7 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
                             _getImage();
                           },
                           child: Text(
+                            // if no picture is selected, the button will say "add a picture". Otherwise, it will say "change picture"
                             _image == null ? 'Ajouter une photo' : 'Changer de photo',
                             style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
@@ -136,6 +177,8 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
                 Container(
                   width: 300,
                   child: TextField(
+                    // controller to get the text from the field
+                    controller: _bioController,
                     decoration: InputDecoration(
                       hintText: "Biographie (facultatif)",
                       hintStyle: TextStyle(
@@ -171,11 +214,11 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
                         )
                     ),
 
-                    // redirection to Homepage after signup (TO CHANGE)
-                    onPressed: () {
+                    // function to store the user info in the database before going to the homepage
+                    onPressed: () async {
+                      await _storeUserInfo();
                       Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => Homepage()),
+                        MaterialPageRoute(builder: (context) => Homepage()),
                       );
                     },
                     child: const Text(
