@@ -4,12 +4,58 @@ import '../../../../../widgets/color_constants.dart';
 import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
 
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
+
 class ProfileCustomization extends StatefulWidget {
   @override
   _ProfileCustomizationState createState() => _ProfileCustomizationState();
 }
 
 class _ProfileCustomizationState extends State<ProfileCustomization> {
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _getImage() async {
+    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File? croppedFile = await ImageCropper().cropImage(
+        sourcePath: pickedFile.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+        cropStyle: CropStyle.circle,
+        compressQuality: 100,
+        maxWidth: 700,
+        maxHeight: 700,
+        compressFormat: ImageCompressFormat.jpg,
+        androidUiSettings: AndroidUiSettings(
+          toolbarTitle: "Recadrer l'image",
+          toolbarColor: Colors.blue,
+          statusBarColor: Colors.blue,
+          backgroundColor: Colors.white,
+        ),
+        iosUiSettings: IOSUiSettings(
+          title: "Recadrer l'image",
+          cancelButtonTitle: "Annuler",
+          doneButtonTitle: "Terminer",
+        ),
+      );
+
+      setState(() {
+        if (croppedFile != null) {
+          _image = croppedFile;
+        } else {
+          print('No image selected.');
+        }
+      });
+    } else {
+      print('No image selected.');
+    }
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +68,9 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
           // logo profile (TO CHANGE)
           Container(
             alignment: Alignment.center,
-            child: Image.asset('assets/logoApp.png'),
+            child: _image == null
+                ? Image.asset('assets/logoApp.png')
+                : Image.file(_image!),
             height: 160,
           ),
           SizedBox(height: 10),
@@ -57,8 +105,10 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
                         height: 40,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              backgroundColor: MaterialStateProperty.all<
+                                  Color>(Colors.white),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
                                       side: BorderSide(color: Colors.white)
@@ -68,13 +118,10 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
 
                           // popup to change profile picture (TO CHANGE)
                           onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => Signup()),
-                            );
+                            _getImage();
                           },
-                          child: const Text(
-                            'Ajouter une photo',
+                          child: Text(
+                            _image == null ? 'Ajouter une photo' : 'Changer de photo',
                             style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
                         ),
@@ -113,8 +160,10 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
                   height: 40,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.white),
+                        shape: MaterialStateProperty.all<
+                            RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 side: BorderSide(color: Colors.white)
@@ -143,8 +192,10 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
                   height: 40,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(ColorConstants.blueDark),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColorConstants.blueDark),
+                        shape: MaterialStateProperty.all<
+                            RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                               side: BorderSide(color: Colors.white)

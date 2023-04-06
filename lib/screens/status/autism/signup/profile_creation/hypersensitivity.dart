@@ -20,7 +20,13 @@ class Hypersensitivity extends StatefulWidget {
 
 class _HypersensitivityState extends State<Hypersensitivity> {
   List<String> _selectedHypersensitivities = [
-    // TO ADD
+    'Hypersensibilité auditive',
+    'Hypersensibilité vestibulaire',
+    'Hypersensibilité proprioceptive',
+    'Hypersensibilité tactile',
+    'Hypersensibilité gustative',
+    'Hypersensibilité visuelle',
+    'Je ne sais pas'
   ];
   List<String> _chosenHypersensitivities = [];
   String? selectedItem = 'Informatique';
