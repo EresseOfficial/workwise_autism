@@ -12,6 +12,8 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 
+import 'package:flutter/foundation.dart';
+
 
 class ProfileCustomization extends StatefulWidget {
   @override
@@ -19,6 +21,8 @@ class ProfileCustomization extends StatefulWidget {
 }
 
 class _ProfileCustomizationState extends State<ProfileCustomization> {
+
+  bool isLoading = false;
 
   // controllers
   final TextEditingController _bioController = TextEditingController();
@@ -215,13 +219,25 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
                     ),
 
                     // function to store the user info in the database before going to the homepage
-                    onPressed: () async {
+
+                    // if the button is pressed, the isLoading variable will be set to true and the button will be disabled
+                    onPressed: isLoading
+                      ? null
+                      : () async {
+                      setState(() {
+                        isLoading = true;
+                      });
                       await _storeUserInfo();
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) => Homepage()),
                       );
                     },
-                    child: const Text(
+                    child: isLoading
+                    // if the button is pressed, a circular progress indicator will be displayed
+                      ? CircularProgressIndicator(
+                      color: Colors.black,
+                    )
+                      : const Text(
                       'Terminer',
                       style: TextStyle(fontSize: 20, color: Colors.black),
                     ),
