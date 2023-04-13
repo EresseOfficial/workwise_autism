@@ -37,12 +37,12 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
       TaskSnapshot taskSnapshot = await uploadTask;
       imageURL = await taskSnapshot.ref.getDownloadURL();
 
-      await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set({
+      await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({
         'bio': _bioController.text,
         'profile_picture': imageURL,
       });
     } else {
-      await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set({
+      await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({
         'bio': _bioController.text,
         'profile_picture': null,
       });

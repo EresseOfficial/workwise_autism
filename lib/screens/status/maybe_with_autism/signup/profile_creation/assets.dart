@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workwise_autism/screens/status/maybe_with_autism/signup/profile_creation/difficulties.dart';
 import '../../../../../widgets/color_constants.dart';
 import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
@@ -185,7 +186,7 @@ class _AssetsState extends State<Assets> {
                       await updateUserAssets(widget.uid, _chosenAssets);
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => ProfileCustomization()),
+                            builder: (context) => Difficulties(uid: FirebaseAuth.instance.currentUser!.uid)),
                       );
                     },
                     child: const Text(

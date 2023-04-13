@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../../widgets/color_constants.dart';
 import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
-import 'assets_and_difficulties.dart';
+import 'assets.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
