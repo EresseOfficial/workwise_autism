@@ -13,6 +13,7 @@ Future<void> updateUserEducationLevel(String uid, int educationLevel) async {
       .update({'educationLevel': educationLevel});
 }
 
+/* AUTISM SIGN UP DATA */
 // adding interests to user in firestore
 Future<void> updateUserInterests(String uid, List<String> interests) async {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
@@ -35,6 +36,33 @@ Future<void> updateUserHypersensitivities(String uid, List<String> hypersensitiv
       .then((value) => print("User hypersensitivities updated"))
       .catchError((error) => print("Failed to update user hypersensitivities: $error"));
 }
+/* END OF AUTISM SIGN UP DATA */
+
+/* M.W.A SIGN UP DATA */
+
+// adding assets to user in firestore
+Future<void> updateUserAssets(String uid, List<String> assets) async {
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+  return users
+      .doc(uid)
+      .update({'assets': assets})
+      .then((value) => print("User assets updated"))
+      .catchError((error) => print("Failed to update user assets: $error"));
+}
+
+// adding difficulties to user in firestore
+Future<void> updateUserDifficulties(String uid, List<String> difficulties) async {
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+  return users
+      .doc(uid)
+      .update({'difficulties': difficulties})
+      .then((value) => print("User difficulties updated"))
+      .catchError((error) => print("Failed to update user difficulties: $error"));
+}
+
+/* END OF M.W.A SIGN UP DATA */
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
 

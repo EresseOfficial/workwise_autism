@@ -4,12 +4,27 @@ import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
 import 'education_lvl.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+Future<void> updateUserBirthDate(DateTime birthDate) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .update({'birthDate' : birthDate});
+  }
+}
+
 class BirthDate extends StatefulWidget {
   @override
   _BirthDateState createState() => _BirthDateState();
 }
 
 class _BirthDateState extends State<BirthDate> {
+  DateTime? selectedDate;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +80,42 @@ class _BirthDateState extends State<BirthDate> {
 
           // birthdate scroller
           Container(
-
+            child: Column(
+              children: [
+                Container(
+                  child: Text(
+                    selectedDate == null ? 'Aucune date sélectionnée' : 'Date sélectionnée: ${selectedDate.toString()}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    final DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                    );
+                    if (pickedDate != null && pickedDate != selectedDate) {
+                      setState(() {
+                        selectedDate = pickedDate;
+                      });
+                    }
+                  },
+                  child: Text(
+                      'Choisir',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black
+                      )
+                  ),
+                  style: ElevatedButton.styleFrom(primary: Colors.white),
+                ),
+              ],
+            ),
           ),
 
           // next and back buttons
@@ -86,10 +136,13 @@ class _BirthDateState extends State<BirthDate> {
                         )
                     ),
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => EducationLvl()),
-                      );
+                      if (selectedDate != null) {
+                        updateUserBirthDate(selectedDate!);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => EducationLvl()),
+                        );
+                      }
                     },
                     child: const Text(
                       'Suivant',

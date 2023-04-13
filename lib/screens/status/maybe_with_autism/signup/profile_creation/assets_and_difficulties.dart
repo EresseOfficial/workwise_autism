@@ -4,13 +4,65 @@ import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
 import 'profile_customization.dart';
 
-class Interest extends StatefulWidget {
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_tags/flutter_tags.dart';
+
+TextEditingController _customAssetsController = TextEditingController();
+
+class Assets extends StatefulWidget {
+  final String uid;
+
+  Assets({required this.uid});
   @override
-  _InterestState createState() => _InterestState();
+  _AssetsState createState() => _AssetsState();
 }
 
-class _InterestState extends State<Interest> {
+class _AssetsState extends State<Assets> {
+  List<String> _selectedAssets = [
+    /*
+    Liste des différents atouts qui est plus axée sur les intérets et les compétences :
+     - Arts visuels (peinture, dessin, photographie, etc.)
+     - Musique (jouer d'un instrument, composer, chanter, etc.)
+     - Écriture et poésie
+     - Programmation et développement de logiciels
+     - Sciences (biologie, physique, chimie, etc.)
+     - Mathématiques
+     - Histoire et géographie
+     - Langues étrangères
+     - Jeux vidéo et conception de jeux
+     - Artisanat et bricolage
+     - Cuisine et pâtisserie
+     - Jardinage et horticulture
+     - Activités sportives et physiques
+     - Théâtre et comédie
+     - Lecture et littérature
+     */
+    'Arts visuels',
+    'Musique',
+    'Écriture et poésie',
+    'Programmation et développement de logiciels',
+    'Sciences',
+    'Mathématiques',
+    'Histoire et géographie',
+    'Langues étrangères',
+    'Jeux vidéo et conception de jeux',
+    'Artisanat et bricolage',
+    'Cuisine et pâtisserie',
+    'Jardinage et horticulture',
+    'Activités sportives et physiques',
+    'Théâtre et comédie',
+    'Lecture et littérature',
+  ];
+  List<String> _chosenAssets = [];
+  String? selectedItem = 'Arts visuels';
+
   @override
+  void dispose() {
+    _customAssetsController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.blueLight,
@@ -45,12 +97,71 @@ class _InterestState extends State<Interest> {
 
           // dropdown button
           Container(
-
+            child: DropdownButton<String>(
+              hint: Text('Sélectionnez un avantage'),
+              value: null,
+              items: _selectedAssets
+                  .map((item) => DropdownMenuItem<String>(
+                value: item,
+                child: Text(item, style: TextStyle(fontSize: 24)),
+              ))
+                  .toList(),
+              onChanged: (item) {
+                if (item != null && !_chosenAssets.contains(item)) {
+                  setState(() {
+                    _chosenAssets.add(item);
+                  });
+                }
+              },
+            ),
           ),
 
-          // interest hashtags
+          // custom assets imput
           Container(
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              controller: _customAssetsController,
+              onSubmitted: (value) {
+                if (value.isNotEmpty) {
+                  setState(() {
+                    _chosenAssets.add(value);
+                    _customAssetsController.clear();
+                  });
+                }
+              },
+              decoration: InputDecoration(
+                labelText: 'Ajouter un avantage personnalisé',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ),
 
+          // list of chosen assets
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Tags(
+              itemCount: _chosenAssets.length,
+              itemBuilder: (index) {
+                return ItemTags(
+                  index: index,
+                  title: _chosenAssets[index],
+                  combine: ItemTagsCombine.withTextBefore,
+                  onPressed: (item) {
+                    if (item != null) {
+                      setState(() {
+                        _chosenAssets.removeAt(item.index);
+                      });
+                    }
+                  },
+                  active: true,
+                  textActiveColor: Colors.white,
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(8),
+                );
+              },
+            ),
           ),
 
           // next and back buttons
@@ -70,7 +181,8 @@ class _InterestState extends State<Interest> {
                             )
                         )
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      await updateUserAssets(widget.uid, _chosenAssets);
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) => ProfileCustomization()),

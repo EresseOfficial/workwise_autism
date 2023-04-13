@@ -241,6 +241,7 @@ class _EducationLvlState extends State<EducationLvl> {
               ],
             ),
           ),
+
           // next and back buttons
           Container(
             child: Column(

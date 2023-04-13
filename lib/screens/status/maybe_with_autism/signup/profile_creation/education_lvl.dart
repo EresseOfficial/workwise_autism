@@ -4,10 +4,25 @@ import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
 import 'assets_and_difficulties.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+Future<void> saveUserEducationLvl(int educationLvl) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .update({'education_lvl': educationLvl});
+  }
+}
+
 class EducationLvl extends StatefulWidget {
   @override
   _EducationLvlState createState() => _EducationLvlState();
 }
+
+int _selectedEducationLvl = 1;
 
 class _EducationLvlState extends State<EducationLvl> {
   @override
@@ -52,8 +67,12 @@ class _EducationLvlState extends State<EducationLvl> {
                   children: [
                     Radio(
                       value: 1,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Primaire",
@@ -70,8 +89,12 @@ class _EducationLvlState extends State<EducationLvl> {
                   children: [
                     Radio(
                       value: 2,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Collège",
@@ -88,8 +111,12 @@ class _EducationLvlState extends State<EducationLvl> {
                   children: [
                     Radio(
                       value: 3,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Lycée",
@@ -106,8 +133,12 @@ class _EducationLvlState extends State<EducationLvl> {
                   children: [
                     Radio(
                       value: 4,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Bac +1",
@@ -124,8 +155,12 @@ class _EducationLvlState extends State<EducationLvl> {
                   children: [
                     Radio(
                       value: 5,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Bac +2",
@@ -142,8 +177,12 @@ class _EducationLvlState extends State<EducationLvl> {
                   children: [
                     Radio(
                       value: 6,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Bac +3",
@@ -160,8 +199,12 @@ class _EducationLvlState extends State<EducationLvl> {
                   children: [
                     Radio(
                       value: 7,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Bac +4",
@@ -178,8 +221,12 @@ class _EducationLvlState extends State<EducationLvl> {
                   children: [
                     Radio(
                       value: 8,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Bac +5 ou plus",
@@ -194,6 +241,7 @@ class _EducationLvlState extends State<EducationLvl> {
               ],
             ),
           ),
+
           // next and back buttons
           Container(
             child: Column(
@@ -211,10 +259,12 @@ class _EducationLvlState extends State<EducationLvl> {
                             )
                         )
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      await saveUserEducationLvl(_selectedEducationLvl);
+                      print("Niveau de scolarité sélectionné : $_selectedEducationLvl");
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => Interest()),
+                            builder: (context) => Assets(uid: FirebaseAuth.instance.currentUser!.uid)),
                       );
                     },
                     child: const Text(

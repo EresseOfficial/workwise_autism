@@ -7,7 +7,6 @@ import 'birthdate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 Future<void> updateUserGender(int gender) async {
   final user = FirebaseAuth.instance.currentUser;
   if (user != null) {
@@ -17,7 +16,6 @@ Future<void> updateUserGender(int gender) async {
         .update({'gender': gender});
   }
 }
-
 
 
 class Gender extends StatefulWidget {
