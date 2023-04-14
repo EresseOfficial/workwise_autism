@@ -218,8 +218,6 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
                         )
                     ),
 
-                    // function to store the user info in the database before going to the homepage
-
                     // if the button is pressed, the isLoading variable will be set to true and the button will be disabled
                     onPressed: isLoading
                       ? null

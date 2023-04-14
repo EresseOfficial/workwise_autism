@@ -85,7 +85,7 @@ class _AssetsState extends State<Assets> {
             child: Column(
               children: [
                 Text(
-                  "Mes atouts et difficultés",
+                  "Mes atouts",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 24,
@@ -99,7 +99,7 @@ class _AssetsState extends State<Assets> {
           // dropdown button
           Container(
             child: DropdownButton<String>(
-              hint: Text('Sélectionnez un avantage'),
+              hint: Text('Sélectionnez un atout'),
               value: null,
               items: _selectedAssets
                   .map((item) => DropdownMenuItem<String>(
@@ -131,7 +131,7 @@ class _AssetsState extends State<Assets> {
                 }
               },
               decoration: InputDecoration(
-                labelText: 'Ajouter un avantage personnalisé',
+                labelText: 'Ajouter un atout personnalisé',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

@@ -125,7 +125,7 @@ class _DifficultiesState extends State<Difficulties> {
                 }
               },
               decoration: InputDecoration(
-                labelText: 'Ajouter un avantage personnalisé',
+                labelText: 'Ajouter une difficulté personnalisé',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
