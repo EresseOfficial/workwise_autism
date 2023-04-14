@@ -4,6 +4,21 @@ import '../../../../../widgets/color_constants.dart';
 import '../../../../profile_management/signup/status.dart';
 import 'certificate.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+String? _currentAutismLink;
+
+List<String> _autismLinkOptions = [
+  "Parent",
+  "Frère ou soeur",
+  "Autre membre de la famille",
+  "Ami",
+  "Professionnel",
+  "Autre"
+];
+
+
 class AutismLink extends StatefulWidget {
   @override
   _AutismLinkState createState() => _AutismLinkState();
@@ -43,10 +58,27 @@ class _AutismLinkState extends State<AutismLink> {
             ),
           ),
 
-          // scrolling menu with 8 radio buttons with text
+          // dropdown menu
           Container(
-
+            padding: EdgeInsets.symmetric(horizontal: 50.0),
+            child: DropdownButton<String>(
+              isExpanded: true,
+              value: _currentAutismLink,
+              hint: Text("Sélectionnez votre lien"),
+              items: _autismLinkOptions.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _currentAutismLink = newValue;
+                });
+              },
+            ),
           ),
+
 
           // next and back buttons
           Container(
