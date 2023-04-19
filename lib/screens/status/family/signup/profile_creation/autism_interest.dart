@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import '../../../../../widgets/color_constants.dart';
 import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
-import 'education_lvl.dart';
+import 'profile_customization.dart';
 
-class BirthDate extends StatefulWidget {
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class Interest extends StatefulWidget {
   @override
-  _BirthDateState createState() => _BirthDateState();
+  _InterestState createState() => _InterestState();
 }
 
-class _BirthDateState extends State<BirthDate> {
+class _InterestState extends State<Interest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +21,8 @@ class _BirthDateState extends State<BirthDate> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(height: 100),
+          
+          // logo app
           Container(
             alignment: Alignment.center,
             child: Image.asset('assets/logoApp.png'),
@@ -25,45 +30,28 @@ class _BirthDateState extends State<BirthDate> {
           ),
           SizedBox(height: 10),
 
-          // birthdate title
+          // interest title
           Container(
             child: Column(
               children: [
-                Container(
-                  child: Column(
-                    children: [
-                      Text(
-                        "Sa date de naissance :",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      )
-                    ],
+                Text(
+                  "Ses centres d'intérêts spécifiques",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
                   ),
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      Text(
-                        "Seul l'âge sera communiqué",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w100,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                )
               ],
             ),
           ),
 
+          // dropdown button
+          Container(
 
+          ),
 
-          // birthdate scroller
+          // interest hashtags
           Container(
 
           ),
@@ -88,7 +76,7 @@ class _BirthDateState extends State<BirthDate> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => EducationLvl()),
+                            builder: (context) => ProfileCustomization()),
                       );
                     },
                     child: const Text(

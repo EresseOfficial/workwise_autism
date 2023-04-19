@@ -3,7 +3,10 @@ import '../signing_up/signup.dart';
 import '../../../../../widgets/color_constants.dart';
 import '../../../../profile_management/signup/status.dart';
 import 'autism_link.dart';
-import 'gender.dart' as family_gender;
+import 'autism_gender.dart' as family_gender;
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AutismFullname extends StatefulWidget {
   @override

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../profile_management/login/login.dart';
 import 'mail_confirm.dart';
 import '../../../../../widgets/color_constants.dart';
+import 'company.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 

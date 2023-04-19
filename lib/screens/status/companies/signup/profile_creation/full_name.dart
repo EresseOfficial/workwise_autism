@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:workwise_autism/screens/status/autism/signup/profile_creation/profile_customization.dart';
 import '../signing_up/signup.dart';
 import '../../../../../widgets/color_constants.dart';
 import '../../../../profile_management/signup/status.dart';
-import 'job.dart';
+// import 'job.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -114,7 +115,7 @@ class _FullnameState extends State<Fullname> {
                 saveFullName(_lastNameController.text, _firstNameController.text);
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (context) => Job()),
+                      builder: (context) => ProfileCustomization()),
                 );
               },
               child: Text(

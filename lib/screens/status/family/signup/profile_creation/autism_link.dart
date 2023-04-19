@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workwise_autism/screens/status/family/signup/profile_creation/autism_full_name.dart';
 import '../signing_up/signup.dart';
 import '../../../../../widgets/color_constants.dart';
 import '../../../../profile_management/signup/status.dart';
@@ -18,6 +19,15 @@ List<String> _autismLinkOptions = [
   "Autre"
 ];
 
+Future<void> updateAutismLink(String? autismLink) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null && autismLink != null) {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .update({'autism_link': autismLink});
+  }
+}
 
 class AutismLink extends StatefulWidget {
   @override
@@ -97,10 +107,11 @@ class _AutismLinkState extends State<AutismLink> {
                             )
                         )
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      await updateAutismLink(_currentAutismLink);
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => Certificate()),
+                            builder: (context) => AutismFullname()),
                       );
                     },
                     child: const Text(

@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import '../../../../../widgets/color_constants.dart';
 import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
-import 'interest.dart';
+import 'autism_birthdate.dart';
 
-class EducationLvl extends StatefulWidget {
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class Gender extends StatefulWidget {
   @override
-  _EducationLvlState createState() => _EducationLvlState();
+  _GenderState createState() => _GenderState();
 }
 
-class _EducationLvlState extends State<EducationLvl> {
+class _GenderState extends State<Gender> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,21 +21,17 @@ class _EducationLvlState extends State<EducationLvl> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(height: 100),
-
-          // logo app
           Container(
             alignment: Alignment.center,
             child: Image.asset('assets/logoApp.png'),
             height: 160,
           ),
           SizedBox(height: 10),
-
-          // education question title
           Container(
             child: Column(
               children: [
                 Text(
-                  "Quel est son niveau de scolarité ?",
+                  "La personne est :",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -42,8 +41,8 @@ class _EducationLvlState extends State<EducationLvl> {
               ],
             ),
           ),
-
-          // 8 radio buttons with text
+          SizedBox(height: 20),
+          // 4 radio buttons with text
           Container(
             child: Column(
               children: [
@@ -56,7 +55,7 @@ class _EducationLvlState extends State<EducationLvl> {
                       onChanged: (value) {},
                     ),
                     Text(
-                      "Primaire",
+                      "Un homme",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -74,7 +73,7 @@ class _EducationLvlState extends State<EducationLvl> {
                       onChanged: (value) {},
                     ),
                     Text(
-                      "Collège",
+                      "Une femme",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -83,118 +82,12 @@ class _EducationLvlState extends State<EducationLvl> {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Radio(
-                      value: 3,
-                      groupValue: 1,
-                      onChanged: (value) {},
-                    ),
-                    Text(
-                      "Lycée",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Radio(
-                      value: 4,
-                      groupValue: 1,
-                      onChanged: (value) {},
-                    ),
-                    Text(
-                      "Bac +1",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Radio(
-                      value: 5,
-                      groupValue: 1,
-                      onChanged: (value) {},
-                    ),
-                    Text(
-                      "Bac +2",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Radio(
-                      value: 6,
-                      groupValue: 1,
-                      onChanged: (value) {},
-                    ),
-                    Text(
-                      "Bac +3",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Radio(
-                      value: 7,
-                      groupValue: 1,
-                      onChanged: (value) {},
-                    ),
-                    Text(
-                      "Bac +4",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Radio(
-                      value: 8,
-                      groupValue: 1,
-                      onChanged: (value) {},
-                    ),
-                    Text(
-                      "Bac +5 ou plus",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
+
               ],
             ),
           ),
-          // next and back buttons
+
+
           Container(
             child: Column(
               children: [
@@ -214,7 +107,7 @@ class _EducationLvlState extends State<EducationLvl> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => Interest()),
+                            builder: (context) => BirthDate()),
                       );
                     },
                     child: const Text(
@@ -224,6 +117,7 @@ class _EducationLvlState extends State<EducationLvl> {
                   ),
                 ),
                 SizedBox(height: 18),
+
 
                 SizedBox(
                   width: 200,

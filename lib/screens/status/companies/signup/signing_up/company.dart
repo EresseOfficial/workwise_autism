@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../signing_up/signup.dart';
 import '../../../../../widgets/color_constants.dart';
 import '../../../../profile_management/signup/status.dart';
 import 'signup.dart' as job_signup;
