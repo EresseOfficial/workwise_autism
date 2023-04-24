@@ -7,12 +7,33 @@ import 'autism_birthdate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class Gender extends StatefulWidget {
-  @override
-  _GenderState createState() => _GenderState();
+Future<void> saveAutismPersonGender(int? gender) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    await FirebaseFirestore.instance
+        .collection('autism_people')
+        .doc(user.uid)
+        .collection('under_18')
+        .doc(user.uid)
+        .update({'gender': gender});
+  }
 }
 
-class _GenderState extends State<Gender> {
+
+class AutismGender extends StatefulWidget {
+  @override
+  _AutismGenderState createState() => _AutismGenderState();
+}
+
+class _AutismGenderState extends State<AutismGender> {
+  int? _selectedGender;
+
+  void _handleGenderChange(int? value) {
+    setState(() {
+      _selectedGender = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,8 +72,8 @@ class _GenderState extends State<Gender> {
                   children: [
                     Radio(
                       value: 1,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedGender,
+                      onChanged: (int? value) => _handleGenderChange(value),
                     ),
                     Text(
                       "Un homme",
@@ -69,8 +90,8 @@ class _GenderState extends State<Gender> {
                   children: [
                     Radio(
                       value: 2,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedGender,
+                      onChanged: (int? value) => _handleGenderChange(value),
                     ),
                     Text(
                       "Une femme",
@@ -104,10 +125,11 @@ class _GenderState extends State<Gender> {
                             )
                         )
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      await saveAutismPersonGender(_selectedGender);
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => BirthDate()),
+                            builder: (context) => AutismBirthDate()),
                       );
                     },
                     child: const Text(

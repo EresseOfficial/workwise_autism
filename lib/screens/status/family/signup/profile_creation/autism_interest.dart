@@ -7,12 +7,12 @@ import 'profile_customization.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class Interest extends StatefulWidget {
+class AutismInterest extends StatefulWidget {
   @override
-  _InterestState createState() => _InterestState();
+  _AutismInterestState createState() => _AutismInterestState();
 }
 
-class _InterestState extends State<Interest> {
+class _AutismInterestState extends State<AutismInterest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

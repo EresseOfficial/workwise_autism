@@ -7,12 +7,26 @@ import 'autism_education_lvl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class BirthDate extends StatefulWidget {
-  @override
-  _BirthDateState createState() => _BirthDateState();
+Future<void> saveAutismPersonBirthdate(DateTime birthDate) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    await FirebaseFirestore.instance
+        .collection('autism_people')
+        .doc(user.uid)
+        .collection('under_18')
+        .doc(user.uid)
+        .update({'birthDate' : birthDate});
+  }
 }
 
-class _BirthDateState extends State<BirthDate> {
+class AutismBirthDate extends StatefulWidget {
+  @override
+  _AutismBirthDateState createState() => _AutismBirthDateState();
+}
+
+class _AutismBirthDateState extends State<AutismBirthDate> {
+  DateTime? selectedDate;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +82,42 @@ class _BirthDateState extends State<BirthDate> {
 
           // birthdate scroller
           Container(
-
+            child: Column(
+              children: [
+                Container(
+                  child: Text(
+                    selectedDate == null ? 'Aucune date sélectionnée' : 'Date sélectionnée: ${selectedDate.toString()}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    final DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                    );
+                    if (pickedDate != null && pickedDate != selectedDate) {
+                      setState(() {
+                        selectedDate = pickedDate;
+                      });
+                    }
+                  },
+                  child: Text(
+                      'Choisir',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black
+                      )
+                  ),
+                  style: ElevatedButton.styleFrom(primary: Colors.white),
+                ),
+              ],
+            ),
           ),
 
           // next and back buttons
@@ -89,10 +138,13 @@ class _BirthDateState extends State<BirthDate> {
                         )
                     ),
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => EducationLvl()),
-                      );
+                      if (selectedDate != null) {
+                        saveAutismPersonBirthdate(selectedDate!);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => AutismEducationLvl()),
+                        );
+                      }
                     },
                     child: const Text(
                       'Suivant',

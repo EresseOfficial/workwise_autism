@@ -3,10 +3,26 @@ import '../signing_up/signup.dart';
 import '../../../../../widgets/color_constants.dart';
 import '../../../../profile_management/signup/status.dart';
 import 'autism_link.dart';
-import 'autism_gender.dart' as family_gender;
+import 'autism_gender.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+Future<void> saveAutismPersonInfo(String firstName, String lastName) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    await FirebaseFirestore.instance
+        .collection('autism_people')
+        .doc(user.uid)
+        .collection('under_18')
+        .doc(user.uid)
+        .set({
+      'first_name': firstName,
+      'last_name': lastName,
+    }, SetOptions(merge: true));
+  }
+}
+
 
 class AutismFullname extends StatefulWidget {
   @override
@@ -14,6 +30,9 @@ class AutismFullname extends StatefulWidget {
 }
 
 class _AutismFullnameState extends State<AutismFullname> {
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +69,7 @@ class _AutismFullnameState extends State<AutismFullname> {
                 Container(
                   width: 300,
                   child: TextField(
+                    controller: _lastNameController,
                     decoration: InputDecoration(
                         hintText: "Nom",
                         hintStyle: TextStyle(
@@ -64,6 +84,7 @@ class _AutismFullnameState extends State<AutismFullname> {
                 Container(
                   width: 300,
                   child: TextField(
+                    controller: _firstNameController,
                     decoration: InputDecoration(
                         hintText: "Prénom",
                         hintStyle: TextStyle(
@@ -83,10 +104,12 @@ class _AutismFullnameState extends State<AutismFullname> {
             width: 300,
             height: 50,
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                await saveAutismPersonInfo(
+                    _firstNameController.text, _lastNameController.text);
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (context) => family_gender.Gender()),
+                      builder: (context) => AutismGender()),
                 );
               },
               child: Text(

@@ -7,12 +7,24 @@ import 'autism_interest.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class EducationLvl extends StatefulWidget {
-  @override
-  _EducationLvlState createState() => _EducationLvlState();
+Future<void> saveAutismPersonEducationLvl(int educationLvl) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    await FirebaseFirestore.instance
+        .collection('autism_people')
+        .doc(user.uid)
+        .collection('under_18')
+        .doc(user.uid)
+        .update({'education_lvl': educationLvl});
+  }
 }
 
-class _EducationLvlState extends State<EducationLvl> {
+class AutismEducationLvl extends StatefulWidget {
+  @override
+  _AutismEducationLvlState createState() => _AutismEducationLvlState();
+}
+
+class _AutismEducationLvlState extends State<AutismEducationLvl> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -217,7 +229,7 @@ class _EducationLvlState extends State<EducationLvl> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => Interest()),
+                            builder: (context) => AutismInterest()),
                       );
                     },
                     child: const Text(
