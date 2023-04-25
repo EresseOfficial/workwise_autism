@@ -24,6 +24,8 @@ class AutismEducationLvl extends StatefulWidget {
   _AutismEducationLvlState createState() => _AutismEducationLvlState();
 }
 
+int _selectedEducationLvl = 1;
+
 class _AutismEducationLvlState extends State<AutismEducationLvl> {
   @override
   Widget build(BuildContext context) {
