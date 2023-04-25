@@ -3,71 +3,47 @@ import '../../../../../widgets/color_constants.dart';
 import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
 import 'profile_customization.dart';
-import 'autism_hypersensitivity.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter_tags/flutter_tags.dart';
 
-TextEditingController _customInterestController = TextEditingController();
+TextEditingController _customAutismHypersensitivityController = TextEditingController();
 
-class AutismInterest extends StatefulWidget {
-  // uid of the user
+
+class AutismHypersensitivity extends StatefulWidget {
   final String uid;
 
-  AutismInterest({required this.uid});
+  AutismHypersensitivity({required this.uid});
   @override
-  _AutismInterestState createState() => _AutismInterestState();
+  _AutismHypersensitivityState createState() => _AutismHypersensitivityState();
 }
 
-class _AutismInterestState extends State<AutismInterest> {
-  // list of interests
-  List<String> _selectedAutismInterests = [
-    'Informatique',
-    'Musique',
-    'Comptabilité',
-    'Jeux vidéo',
-    'Cinéma et télevision',
-    'Lecture / Littérature',
-    'Arts plastiques',
-    'Photographie',
-    'Théâtre / Comédie',
-    'Danse',
-    'Cuisine / Pâtisserie',
-    'Sports',
-    'Activités de plein air',
-    'Voyages / Tourisme',
-    'Animaux / Soins aux animaux',
-    'Jardinage / Horticulture',
-    'Bricolage / Travaux manuels',
-    'Mode / Beauté',
-    'Histoire',
-    'Sciences',
-    'Langues étrangères',
-    'Méditation / Yoga',
-    'Collections (timbres, pièces...)',
-    'Jeux de société / Cartes',
-    'Podcasts / Radio',
-    'Écriture (poésie, romans...)'
+class _AutismHypersensitivityState extends State<AutismHypersensitivity> {
+  List<String> _selectedAutismHypersensitivities = [
+    'Hypersensibilité auditive',
+    'Hypersensibilité vestibulaire',
+    'Hypersensibilité proprioceptive',
+    'Hypersensibilité tactile',
+    'Hypersensibilité gustative',
+    'Hypersensibilité visuelle',
+    'Je ne sais pas'
   ];
-  List<String> _chosenAutismInterests = [];
+  List<String> _chosenAutismHypersensitivities = [];
   String? selectedItem = 'Informatique';
 
   @override
   void dispose() {
-    _customInterestController.dispose();
+    _customAutismHypersensitivityController.dispose();
     super.dispose();
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.yellow,
+      backgroundColor: ColorConstants.blueDark,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(height: 100),
-          
+
           // logo app
           Container(
             alignment: Alignment.center,
@@ -76,15 +52,17 @@ class _AutismInterestState extends State<AutismInterest> {
           ),
           SizedBox(height: 10),
 
-          // interest title
+          // hypersensitivity title
           Container(
             child: Column(
               children: [
                 Text(
-                  "Ses centres d'intérêts spécifiques",
+                  // justify text to center
+                  "Mes hypersensibilités",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.w700,
                   ),
                 )
@@ -92,20 +70,21 @@ class _AutismInterestState extends State<AutismInterest> {
             ),
           ),
 
+          // dropdown button
           Container(
             child: DropdownButton<String>(
-              hint: Text('Sélectionnez un centre d\'intérêt'),
+              hint: Text('Sélectionnez une hypersensibilité'),
               value: null,
-              items: _selectedAutismInterests
+              items: _selectedAutismHypersensitivities
                   .map((item) => DropdownMenuItem<String>(
                 value: item,
                 child: Text(item, style: TextStyle(fontSize: 24)),
               ))
                   .toList(),
               onChanged: (item) {
-                if (item != null && !_chosenAutismInterests.contains(item)) {
+                if (item != null && !_chosenAutismHypersensitivities.contains(item)) {
                   setState(() {
-                    _chosenAutismInterests.add(item);
+                    _chosenAutismHypersensitivities.add(item);
                   });
                 }
               },
@@ -115,21 +94,21 @@ class _AutismInterestState extends State<AutismInterest> {
 
 
 
-          // custom interest input
+          // custom hypersensitivity input
           Container(
             margin: EdgeInsets.symmetric(horizontal: 16),
             child: TextField(
-              controller: _customInterestController,
+              controller: _customAutismHypersensitivityController,
               onSubmitted: (value) {
                 if (value.isNotEmpty) {
                   setState(() {
-                    _chosenAutismInterests.add(value);
-                    _customInterestController.clear();
+                    _chosenAutismHypersensitivities.add(value);
+                    _customAutismHypersensitivityController.clear();
                   });
                 }
               },
               decoration: InputDecoration(
-                labelText: 'Ajouter un centre d\'intérêt personnalisé',
+                labelText: 'Ajouter une hypersensibilité personnalisée',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -138,20 +117,20 @@ class _AutismInterestState extends State<AutismInterest> {
           ),
 
 
-          // chosen interest hashtags
+          // chosen hypersensitivity hashtags
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Tags(
-              itemCount: _chosenAutismInterests.length,
+              itemCount: _chosenAutismHypersensitivities.length,
               itemBuilder: (index) {
                 return ItemTags(
                   index: index,
-                  title: _chosenAutismInterests[index],
+                  title: _chosenAutismHypersensitivities[index],
                   combine: ItemTagsCombine.withTextBefore,
                   onPressed: (item) {
                     if (item != null) {
                       setState(() {
-                        _chosenAutismInterests.removeAt(item.index);
+                        _chosenAutismHypersensitivities.removeAt(item.index);
                       });
                     }
                   },
@@ -163,6 +142,8 @@ class _AutismInterestState extends State<AutismInterest> {
               },
             ),
           ),
+
+
 
           // next and back buttons
           Container(
@@ -182,10 +163,10 @@ class _AutismInterestState extends State<AutismInterest> {
                         )
                     ),
                     onPressed: () async {
-                      await updateAutismInterests(widget.uid, _chosenAutismInterests);
+                      await updateAutismHypersensitivities(widget.uid, _chosenAutismHypersensitivities);
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => AutismHypersensitivity(uid: widget.uid)),
+                            builder: (context) => ProfileCustomization()),
                       );
                     },
                     child: const Text(

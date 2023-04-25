@@ -7,6 +7,7 @@ import 'interest.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// save user education lvl in firestore
 Future<void> saveUserEducationLvl(int educationLvl) async {
   final user = FirebaseAuth.instance.currentUser;
   if (user != null) {

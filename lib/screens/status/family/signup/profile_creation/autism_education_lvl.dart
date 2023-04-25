@@ -265,7 +265,7 @@ class _AutismEducationLvlState extends State<AutismEducationLvl> {
                       print("Niveau de scolarité sélectionné : $_selectedEducationLvl");
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => AutismInterest()),
+                            builder: (context) => AutismInterest(uid: FirebaseAuth.instance.currentUser!.uid)),
                       );
                     },
                     child: const Text(

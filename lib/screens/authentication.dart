@@ -64,6 +64,36 @@ Future<void> updateUserDifficulties(String uid, List<String> difficulties) async
 
 /* END OF M.W.A SIGN UP DATA */
 
+/* FAMILY SIGN UP DATA */
+
+// adding interests to 'autism_people/uid/under_18/uid' in firestore
+Future<void> updateAutismInterests(String uid, List<String> interests) async {
+  CollectionReference users = FirebaseFirestore.instance.collection('autism_people');
+
+  return users
+      .doc(uid)
+      .collection('under_18')
+      .doc(uid)
+      .update({'interests': interests})
+      .then((value) => print("Family member interests updated"))
+      .catchError((error) => print("Failed to update family member interests: $error"));
+}
+
+// adding hypersensitivities to 'autism_people/uid/under_18/uid' in firestore
+Future<void> updateAutismHypersensitivities(String uid, List<String> hypersensitivities) async {
+  CollectionReference users = FirebaseFirestore.instance.collection('autism_people');
+
+  return users
+      .doc(uid)
+      .collection('under_18')
+      .doc(uid)
+      .update({'hypersensitivities': hypersensitivities})
+      .then((value) => print("Family member hypersensitivities updated"))
+      .catchError((error) => print("Failed to update family member hypersensitivities: $error"));
+}
+
+/* END OF FAMILY SIGN UP DATA */
+
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
 FirebaseFirestore db = FirebaseFirestore.instance;
