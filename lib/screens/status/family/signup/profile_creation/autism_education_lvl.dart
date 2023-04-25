@@ -69,8 +69,12 @@ class _AutismEducationLvlState extends State<AutismEducationLvl> {
                   children: [
                     Radio(
                       value: 1,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Primaire",
@@ -87,8 +91,12 @@ class _AutismEducationLvlState extends State<AutismEducationLvl> {
                   children: [
                     Radio(
                       value: 2,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Collège",
@@ -105,8 +113,12 @@ class _AutismEducationLvlState extends State<AutismEducationLvl> {
                   children: [
                     Radio(
                       value: 3,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Lycée",
@@ -123,8 +135,12 @@ class _AutismEducationLvlState extends State<AutismEducationLvl> {
                   children: [
                     Radio(
                       value: 4,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Bac +1",
@@ -141,8 +157,12 @@ class _AutismEducationLvlState extends State<AutismEducationLvl> {
                   children: [
                     Radio(
                       value: 5,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Bac +2",
@@ -159,8 +179,12 @@ class _AutismEducationLvlState extends State<AutismEducationLvl> {
                   children: [
                     Radio(
                       value: 6,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Bac +3",
@@ -177,8 +201,12 @@ class _AutismEducationLvlState extends State<AutismEducationLvl> {
                   children: [
                     Radio(
                       value: 7,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Bac +4",
@@ -195,8 +223,12 @@ class _AutismEducationLvlState extends State<AutismEducationLvl> {
                   children: [
                     Radio(
                       value: 8,
-                      groupValue: 1,
-                      onChanged: (value) {},
+                      groupValue: _selectedEducationLvl,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _selectedEducationLvl = value!;
+                        });
+                      },
                     ),
                     Text(
                       "Bac +5 ou plus",
@@ -228,7 +260,9 @@ class _AutismEducationLvlState extends State<AutismEducationLvl> {
                             )
                         )
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      await saveAutismPersonEducationLvl(_selectedEducationLvl);
+                      print("Niveau de scolarité sélectionné : $_selectedEducationLvl");
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) => AutismInterest()),

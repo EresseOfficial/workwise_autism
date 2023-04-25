@@ -3,17 +3,61 @@ import '../../../../../widgets/color_constants.dart';
 import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
 import 'profile_customization.dart';
+// import 'hypersensivity.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:flutter_tags/flutter_tags.dart';
+
+TextEditingController _customInterestController = TextEditingController();
+
 class AutismInterest extends StatefulWidget {
+  final String uid;
+
+  AutismInterest({required this.uid});
   @override
   _AutismInterestState createState() => _AutismInterestState();
 }
 
 class _AutismInterestState extends State<AutismInterest> {
+  List<String> _selectedInterests = [
+    'Informatique',
+    'Musique',
+    'Comptabilité',
+    'Jeux vidéo',
+    'Cinéma et télevision',
+    'Lecture / Littérature',
+    'Arts plastiques',
+    'Photographie',
+    'Théâtre / Comédie',
+    'Danse',
+    'Cuisine / Pâtisserie',
+    'Sports',
+    'Activités de plein air',
+    'Voyages / Tourisme',
+    'Animaux / Soins aux animaux',
+    'Jardinage / Horticulture',
+    'Bricolage / Travaux manuels',
+    'Mode / Beauté',
+    'Histoire',
+    'Sciences',
+    'Langues étrangères',
+    'Méditation / Yoga',
+    'Collections (timbres, pièces...)',
+    'Jeux de société / Cartes',
+    'Podcasts / Radio',
+    'Écriture (poésie, romans...)'
+  ];
+  List<String> _chosenInterests = [];
+  String? selectedItem = 'Informatique';
+
   @override
+  void dispose() {
+    _customInterestController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.yellow,
