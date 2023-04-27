@@ -3,7 +3,39 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../widgets/color_constants.dart';
 import 'profile_management/signup/status.dart';
 import 'profile_management/login/login.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final GoogleSignIn googleSignIn = GoogleSignIn();
+final FirebaseAuth auth = FirebaseAuth.instance;
+
+//
+Future<User?> signInWithGoogle() async {
+  try {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    if (googleUser == null) return null;
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    // Create a new credential
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    // Sign in to Firebase with the Google [UserCredential]
+    final UserCredential userCredential = await auth.signInWithCredential(credential);
+
+    // Once signed in, return the UserCredential
+    return userCredential.user;
+  } catch (error) {
+    print("Error during Google sign in: $error");
+    return null;
+  }
+}
 
 // adding education level to user in firestore
 Future<void> updateUserEducationLevel(String uid, int educationLevel) async {
@@ -93,8 +125,6 @@ Future<void> updateAutismHypersensitivities(String uid, List<String> hypersensit
 }
 
 /* END OF FAMILY SIGN UP DATA */
-
-final GoogleSignIn googleSignIn = GoogleSignIn();
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -190,49 +220,6 @@ class _AuthenticationState extends State<Authentication> {
                   ),
                   SizedBox(height: 20),
 
-
-
-                  // Container(
-                  //   height: 55,
-                  //   width: 260,
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(50),
-                  //     color: Colors.white,
-                  //   ),
-                  //   child: Center(
-                  //     child: Text(
-                  //       "Sign Up",
-                  //       style: TextStyle(
-                  //         color: ColorConstants.blueDark,
-                  //         fontSize: 20,
-                  //         fontWeight: FontWeight.w700,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(height: 20),
-                  // Container(
-                  //   height: 55,
-                  //   width: 260,
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(50),
-                  //     border: Border.all(
-                  //       color: Colors.white,
-                  //       width: 2,
-                  //     ),
-                  //   ),
-                  //   child: Center(
-                  //     child: Text(
-                  //       "Log In",
-                  //       style: TextStyle(
-                  //         color: Colors.white,
-                  //         fontSize: 20,
-                  //         fontWeight: FontWeight.w700,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(height: 20),
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -261,29 +248,30 @@ class _AuthenticationState extends State<Authentication> {
                     ),
                   ),
                   SizedBox(height: 20),
+
                   // fast login buttons (Google, Facebook, Apple)
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          height: 55,
-                          width: 55,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: Colors.white,
-                          ),
-                          child: Center(
-                            child: Text(
-                              "G",
-                              style: TextStyle(
-                                color: ColorConstants.blueDark,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                              ),
+                        InkWell(
+                          onTap: () async {
+                            User? user = await signInWithGoogle();
+                            if (user != null) {
+                              // L'utilisateur s'est connecté avec succès, fais ce que tu veux avec l'objet `user`.
+                            } else {
+                              // Une erreur s'est produite lors de la connexion.
+                            }
+                          },
+                          child: Container(
+                            height: 55,
+                            width: 55,
+                            child: Center(
+                              child: Image.asset('assets/google_icon.png', width: 70, height: 70), // Remplacer par le nom de ton fichier d'icône Google
                             ),
                           ),
                         ),
+
                         SizedBox(width: 20),
                         Container(
                           height: 55,
