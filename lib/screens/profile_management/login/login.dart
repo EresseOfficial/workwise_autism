@@ -21,7 +21,7 @@ class _LoginState extends State<Login> {
           // Application logo
           Container(
             alignment: Alignment.center,
-            child: Image.asset('assets/logoApp.png'),
+            child: Image.asset('assets/logos/logoApp.png'),
             height: 160,
           ),
 

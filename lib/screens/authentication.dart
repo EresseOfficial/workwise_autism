@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../widgets/color_constants.dart';
 import 'profile_management/signup/status.dart';
 import 'profile_management/login/login.dart';
@@ -7,10 +6,14 @@ import 'profile_management/login/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final FirebaseAuth auth = FirebaseAuth.instance;
 
-//
+// Google Sign In
 Future<User?> signInWithGoogle() async {
   try {
     // Trigger the authentication flow
@@ -34,6 +37,40 @@ Future<User?> signInWithGoogle() async {
   } catch (error) {
     print("Error during Google sign in: $error");
     return null;
+  }
+}
+
+// Facebook Sign In
+Future<void> signInWithFacebook() async {
+  try {
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+    if (loginResult.status == LoginStatus.success) {
+      // Utilise l'access token pour récupérer les informations utilisateur
+      final userData = await FacebookAuth.instance.getUserData();
+      // Traite les données utilisateur récupérées
+      print("Connexion Facebook réussie : $userData");
+    } else {
+      print("Connexion Facebook annulée par l'utilisateur.");
+    }
+  } on Exception catch (e) {
+    print("Erreur lors de la connexion Facebook : $e");
+  }
+}
+
+// Apple Sign In
+Future<void> signInWithApple() async {
+  try {
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
+
+    // Use the credential information obtained to authenticate with your own system
+    print(credential);
+  } catch (e) {
+    print('Erreur lors de la connexion avec Apple : $e');
   }
 }
 
@@ -144,7 +181,7 @@ class _AuthenticationState extends State<Authentication> {
             SizedBox(height: 100),
       Container(
         alignment: Alignment.center,
-        child: Image.asset('assets/logoApp.png'),
+        child: Image.asset('assets/logos/logoApp.png'),
         height: 160,
       ),
             SizedBox(height: 10),
@@ -258,16 +295,16 @@ class _AuthenticationState extends State<Authentication> {
                           onTap: () async {
                             User? user = await signInWithGoogle();
                             if (user != null) {
-                              // L'utilisateur s'est connecté avec succès, fais ce que tu veux avec l'objet `user`.
+                              // The user is logged in.
                             } else {
-                              // Une erreur s'est produite lors de la connexion.
+                              // An error occurred during login.
                             }
                           },
                           child: Container(
                             height: 55,
                             width: 55,
                             child: Center(
-                              child: Image.asset('assets/google_icon.png', width: 70, height: 70), // Remplacer par le nom de ton fichier d'icône Google
+                              child: Image.asset('assets/logos/google_icon.png', width: 70, height: 70),
                             ),
                           ),
                         ),
@@ -276,17 +313,16 @@ class _AuthenticationState extends State<Authentication> {
                         Container(
                           height: 55,
                           width: 55,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: Colors.white,
-                          ),
                           child: Center(
-                            child: Text(
-                              "F",
-                              style: TextStyle(
-                                color: ColorConstants.blueDark,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
+                            child: InkWell(
+                              onTap: () {
+                                signInWithFacebook();
+                              },
+                              child: Image.asset(
+                                'assets/logos/facebook_icon.png',
+                                height: 45,
+                                width: 45,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
@@ -295,17 +331,16 @@ class _AuthenticationState extends State<Authentication> {
                         Container(
                           height: 55,
                           width: 55,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: Colors.white,
-                          ),
                           child: Center(
-                            child: Text(
-                              "A",
-                              style: TextStyle(
-                                color: ColorConstants.blueDark,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
+                            child: InkWell(
+                              onTap: () {
+                                signInWithApple();
+                              },
+                              child: Image.asset(
+                                'assets/logos/apple_icon.png',
+                                height: 45,
+                                width: 45,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),

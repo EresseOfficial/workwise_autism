@@ -48,6 +48,8 @@ dependencies:
   image_cropper: ^1.5.1
   firebase_storage: ^11.1.0
   google_sign_in: ^6.1.0
+  flutter_facebook_auth: ^5.0.8
+  sign_in_with_apple: ^4.3.0
 
 dev_dependencies:
   flutter_test:
@@ -73,8 +75,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-      - assets/logoApp.png
-      - assets/google_icon.png
+      - assets/logos/logoApp.png
+      - assets/logos/google_icon.png
+      - assets/logos/facebook_icon.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

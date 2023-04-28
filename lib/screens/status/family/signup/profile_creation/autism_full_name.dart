@@ -43,7 +43,7 @@ class _AutismFullnameState extends State<AutismFullname> {
           SizedBox(height: 100),
           Container(
             alignment: Alignment.center,
-            child: Image.asset('assets/logoApp.png'),
+            child: Image.asset('assets/logos/logoApp.png'),
             height: 160,
           ),
           SizedBox(height: 10),

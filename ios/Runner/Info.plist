@@ -53,8 +53,22 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>com.googleusercontent.apps.608446180656-7t95u8rldv2ia8e2cudmmb4hvg3c6r7t</string>
+          <string>fb6119182811505111</string>
         </array>
       </dict>
+    </array>
+    <key>FacebookAppID</key>
+    <string>6119182811505111</string>
+    <key>FacebookDisplayName</key>
+    <string>WorkWise Autism</string>
+    <key>FacebookClientToken</key>
+    <string>f4bef734a18897306b54e18030e9331d</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>fbapi</string>
+      <string>fb-messenger-share-api</string>
+      <string>fbauth2</string>
+      <string>fbshareextension</string>
     </array>
 </dict>
 </plist>

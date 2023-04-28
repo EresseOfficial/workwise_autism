@@ -105,7 +105,7 @@ class _ProfileCustomizationState extends State<ProfileCustomization> {
           Container(
             alignment: Alignment.center,
             child: _image == null
-                ? Image.asset('assets/logoApp.png')
+                ? Image.asset('assets/logos/logoApp.png')
                 : ClipOval(
               child: Image.file(
                 _image!,
