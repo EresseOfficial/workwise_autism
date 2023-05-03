@@ -65,6 +65,11 @@ Future<void> signInWithApple() async {
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
       ],
+      webAuthenticationOptions: WebAuthenticationOptions(
+        clientId: '32DN4HNNXU',
+        redirectUri: Uri.parse(
+            'https://workwise-autism.com/callbacks/sign_in_with_apple'),
+      ),
     );
 
     // Use the credential information obtained to authenticate with your own system
