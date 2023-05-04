@@ -13,71 +13,6 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final FirebaseAuth auth = FirebaseAuth.instance;
 
-// Google Sign In
-Future<User?> signInWithGoogle() async {
-  try {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    if (googleUser == null) return null;
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-    // Create a new credential
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    // Sign in to Firebase with the Google [UserCredential]
-    final UserCredential userCredential = await auth.signInWithCredential(credential);
-
-    // Once signed in, return the UserCredential
-    return userCredential.user;
-  } catch (error) {
-    print("Error during Google sign in: $error");
-    return null;
-  }
-}
-
-// Facebook Sign In
-Future<void> signInWithFacebook() async {
-  try {
-    final LoginResult loginResult = await FacebookAuth.instance.login();
-    if (loginResult.status == LoginStatus.success) {
-      // Utilise l'access token pour récupérer les informations utilisateur
-      final userData = await FacebookAuth.instance.getUserData();
-      // Traite les données utilisateur récupérées
-      print("Connexion Facebook réussie : $userData");
-    } else {
-      print("Connexion Facebook annulée par l'utilisateur.");
-    }
-  } on Exception catch (e) {
-    print("Erreur lors de la connexion Facebook : $e");
-  }
-}
-
-// Apple Sign In
-Future<void> signInWithApple() async {
-  try {
-    final credential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-      webAuthenticationOptions: WebAuthenticationOptions(
-        clientId: '32DN4HNNXU',
-        redirectUri: Uri.parse(
-            'https://workwise-autism.com/callbacks/sign_in_with_apple'),
-      ),
-    );
-
-    // Use the credential information obtained to authenticate with your own system
-    print(credential);
-  } catch (e) {
-    print('Erreur lors de la connexion avec Apple : $e');
-  }
-}
 
 // adding education level to user in firestore
 Future<void> updateUserEducationLevel(String uid, int educationLevel) async {
@@ -168,6 +103,16 @@ Future<void> updateAutismHypersensitivities(String uid, List<String> hypersensit
 
 /* END OF FAMILY SIGN UP DATA */
 
+//
+class ExternalAccountInfo {
+  final String name;
+  final String email;
+  final String userId;
+
+  ExternalAccountInfo({required this.name, required this.email, required this.userId});
+}
+
+
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 class Authentication extends StatefulWidget {
@@ -176,6 +121,84 @@ class Authentication extends StatefulWidget {
 }
 
 class _AuthenticationState extends State<Authentication> {
+
+  // Google Sign In
+  Future<User?> signInWithGoogle(BuildContext context) async {
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      if (googleUser == null) return null;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      // Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in to Firebase with the Google [UserCredential]
+      final UserCredential userCredential = await auth.signInWithCredential(credential);
+
+      // Once signed in, return the UserCredential
+      final User? user = userCredential.user;
+      if (user != null) {
+        redirectToStatusPage(context);
+      }
+      return user;
+    } catch (e) {
+      print('Erreur lors de la connexion Google : $e');
+    }
+  }
+
+// Facebook Sign In
+  Future<void> signInWithFacebook(BuildContext context) async {
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+      if (loginResult.status == LoginStatus.success) {
+        // Use access token to get user data from Facebook
+        final userData = await FacebookAuth.instance.getUserData();
+        // Process the user data retrieved from Facebook
+        print("Connexion Facebook réussie : $userData");
+        redirectToStatusPage(context);
+      } else {
+        print("Connexion Facebook annulée par l'utilisateur.");
+      }
+    } on Exception catch (e) {
+      print("Erreur lors de la connexion Facebook : $e");
+    }
+  }
+
+// Apple Sign In
+  Future<void> signInWithApple(BuildContext context) async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        webAuthenticationOptions: WebAuthenticationOptions(
+          clientId: '32DN4HNNXU',
+          redirectUri: Uri.parse(
+              'https://workwise-autism.com/callbacks/sign_in_with_apple'),
+        ),
+      );
+
+      // Use the credential information obtained to authenticate with your own system
+      print(credential);
+      redirectToStatusPage(context);
+    } catch (e) {
+      print('Erreur lors de la connexion avec Apple : $e');
+    }
+  }
+
+  // function to redirect to status page once quick connect is done and successful
+  void redirectToStatusPage(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => Status()),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -296,9 +319,10 @@ class _AuthenticationState extends State<Authentication> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        // Google
                         InkWell(
                           onTap: () async {
-                            User? user = await signInWithGoogle();
+                            User? user = await signInWithGoogle(context);
                             if (user != null) {
                               // The user is logged in.
                             } else {
@@ -315,13 +339,15 @@ class _AuthenticationState extends State<Authentication> {
                         ),
 
                         SizedBox(width: 20),
+
+                        // Facebook
                         Container(
                           height: 55,
                           width: 55,
                           child: Center(
                             child: InkWell(
                               onTap: () {
-                                signInWithFacebook();
+                                signInWithFacebook(context);
                               },
                               child: Image.asset(
                                 'assets/logos/facebook_icon.png',
@@ -333,13 +359,15 @@ class _AuthenticationState extends State<Authentication> {
                           ),
                         ),
                         SizedBox(width: 20),
+
+                        // Apple
                         Container(
                           height: 55,
                           width: 55,
                           child: Center(
                             child: InkWell(
                               onTap: () {
-                                signInWithApple();
+                                signInWithApple(context);
                               },
                               child: Image.asset(
                                 'assets/logos/apple_icon.png',

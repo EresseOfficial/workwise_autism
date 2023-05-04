@@ -28,6 +28,8 @@ Future<void> saveFullName(String lastName, String firstName) async {
   }
 }
 
+
+
 final TextEditingController _lastNameController = TextEditingController();
 final TextEditingController _firstNameController = TextEditingController();
 
@@ -40,6 +42,26 @@ class Fullname extends StatefulWidget {
 
 class _FullnameState extends State<Fullname> {
   @override
+  void initState() {
+    super.initState();
+    _getUserFullName();
+  }
+  Future<void> _getUserFullName() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      CollectionReference users = FirebaseFirestore.instance.collection('users');
+      try {
+        DocumentSnapshot userData = await users.doc(user.uid).get();
+        setState(() {
+          _lastNameController.text = userData['lastName'] ?? '';
+          _firstNameController.text = userData['firstName'] ?? '';
+        });
+      } catch (e) {
+        print('Error getting user full name: $e');
+      }
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.blueDark,
