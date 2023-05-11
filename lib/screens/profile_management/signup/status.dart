@@ -3,7 +3,7 @@ import '../../../../widgets/color_constants.dart';
 import '../../authentication.dart';
 
 import '../../status/autism/signup/signing_up/signup.dart' as autism_signup;
-import '../../status/companies/signup/signing_up/company.dart' as job_company;
+// import '../../status/companies/signup/signing_up/company.dart' as job_company;
 import '../../status/family/signup/signing_up/signup.dart' as family_signup;
 import '../../status/maybe_with_autism/signup/signing_up/signup.dart' as maybe_with_autism;
 
@@ -25,22 +25,22 @@ class _StatusState extends State<Status> {
     switch (_selectedStatus) {
       case 1:
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => autism_signup.Signup()),
+          MaterialPageRoute(builder: (context) => autism_signup.Signup(status: _selectedStatus)),
         );
         break;
       case 2:
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => maybe_with_autism.Signup()),
+          MaterialPageRoute(builder: (context) => maybe_with_autism.Signup(status: _selectedStatus)),
         );
         break;
-      case 3:
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => job_company.Company()),
-        );
-        break;
+      // case 3:
+      //   Navigator.of(context).push(
+      //     MaterialPageRoute(builder: (context) => job_company.Company(status: _selectedStatus)),
+      //   );
+      //   break;
       case 4:
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => family_signup.Signup()),
+          MaterialPageRoute(builder: (context) => family_signup.Signup(status: _selectedStatus)),
         );
         break;
     }
@@ -145,29 +145,29 @@ class _StatusState extends State<Status> {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Radio(
-                      value: 3,
-                      groupValue: _selectedStatus,
-                      onChanged: (int? value) {
-                        setState(() {
-                          _selectedStatus = value;
-                        });
-                      },
-                    ),
-                    Text(
-                      "Recruteur d'entreprise",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.start,
+                //   children: [
+                //     Radio(
+                //       value: 3,
+                //       groupValue: _selectedStatus,
+                //       onChanged: (int? value) {
+                //         setState(() {
+                //           _selectedStatus = value;
+                //         });
+                //       },
+                //     ),
+                //     Text(
+                //       "Recruteur d'entreprise",
+                //       textAlign: TextAlign.left,
+                //       style: TextStyle(
+                //         color: Colors.white,
+                //         fontSize: 20,
+                //         fontWeight: FontWeight.w700,
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -223,11 +223,11 @@ class _StatusState extends State<Status> {
                               builder: (context) => maybe_with_autism.Signup(),
                             ));
                             break;
-                          case 3:
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => job_company.Company(),
-                            ));
-                            break;
+                          // case 3:
+                          //   Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (context) => job_company.Company(),
+                          //   ));
+                          //   break;
                           case 4:
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => family_signup.Signup(),

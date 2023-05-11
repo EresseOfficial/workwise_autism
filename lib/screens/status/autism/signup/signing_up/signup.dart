@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../../../profile_management/login/login.dart';
 import 'mail_confirm.dart';
 import '../../../../../widgets/color_constants.dart';
+import '../../../../profile_management/signup/status.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -16,16 +18,23 @@ void sendVerificationEmail() async {
   }
 }
 
-Future<void> registerUser(String email, String password) async {
+Future<void> registerUser(String email, String password, int status) async {
   try {
     UserCredential userCredential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
     print('User registered: ${userCredential.user}');
     sendVerificationEmail();
+
+    // save status
+    FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
+      'status': status,
+    });
+
   } on FirebaseAuthException catch (e) {
     print('Error: $e');
   }
 }
+
 
 // bool password
 bool _obscurePassword = true;
@@ -35,6 +44,10 @@ bool _obscureConfirmPassword = true;
 bool _isLoading = false;
 
 class Signup extends StatefulWidget {
+  final int? status;
+
+  Signup({Key? key, this.status}) : super(key: key);
+
   @override
   _SignupState createState() => _SignupState();
 }
@@ -47,6 +60,7 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.status);
     return Scaffold(
       backgroundColor: ColorConstants.blueDark,
       body: Column(
@@ -80,7 +94,7 @@ class _SignupState extends State<Signup> {
                 Container(
                   width: 300,
                   child: TextField(
-                    controller: emailController,
+                    controller: _emailController,
                     decoration: InputDecoration(
                         hintText: "E-mail",
                         hintStyle: TextStyle(
@@ -156,7 +170,7 @@ class _SignupState extends State<Signup> {
             child: ElevatedButton(
               onPressed: () {
                 if (passwordController.text == confirmPasswordController.text) {
-                  registerUser(emailController.text, passwordController.text);
+                  registerUser(_emailController.text, _passwordController.text, widget.status!);
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => MailConfirm()),

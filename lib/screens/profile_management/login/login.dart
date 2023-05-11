@@ -1,7 +1,53 @@
 import 'package:flutter/material.dart';
-// import '../signup/signing_up/signup.dart';
 import '../../../widgets/color_constants.dart';
 import '../signup/status.dart';
+import '../../status/autism/connected/homepage.dart' as autism_homepage;
+import '../../status/companies/connected/homepage.dart' as job_company_homepage;
+import '../../status/family/connected/homepage.dart' as family_homepage;
+import '../../status/maybe_with_autism/connected/homepage.dart' as maybe_with_autism_homepage;
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final _emailController = TextEditingController();
+final _passwordController = TextEditingController();
+final _auth = FirebaseAuth.instance;
+
+Future<void> _signInWithEmailAndPassword() async {
+  try {
+    final userCredential = await _auth.signInWithEmailAndPassword(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+    // redirect user to home page
+    print("Connexion réussie pour l'utilisateur : ${userCredential.user!.email}");
+  } on FirebaseAuthException catch (e) {
+    print("Erreur lors de la connexion : $e");
+    // display error message to user
+  }
+}
+
+/* Replace function _signInWithEmailAndPassword() with this below later */
+// Future<void> _signInWithEmailAndPassword() async {
+//   try {
+//     final userCredential = await _auth.signInWithEmailAndPassword(
+//       email: _emailController.text,
+//       password: _passwordController.text,
+//     );
+//     // redirect user to home page based on their status
+//     Navigator.of(context).pushReplacement(
+//       MaterialPageRoute(
+//         builder: (context) => Homepage(),
+//       ),
+//     );
+//   } on FirebaseAuthException catch (e) {
+//     print("Erreur lors de la connexion : $e");
+//     // display error message to user
+//   }
+// }
+
+
+
 
 class Login extends StatefulWidget {
   @override
@@ -10,6 +56,12 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.blueDark,
@@ -48,6 +100,7 @@ class _LoginState extends State<Login> {
                 Container(
                   width: 300,
                   child: TextField(
+                    controller: _emailController,
                     decoration: InputDecoration(
                       hintText: "E-mail",
                       hintStyle: TextStyle(
@@ -62,6 +115,7 @@ class _LoginState extends State<Login> {
                 Container(
                   width: 300,
                   child: TextField(
+                    controller: _passwordController,
                     decoration: InputDecoration(
                       hintText: "Mot de passe",
                       hintStyle: TextStyle(
@@ -84,7 +138,7 @@ class _LoginState extends State<Login> {
                   width: 300,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _signInWithEmailAndPassword,
                     child: Text(
                       "Se connecter",
                       style: TextStyle(

@@ -30,7 +30,7 @@ class workwise_autism extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       title: 'WorkWise Autism',
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,

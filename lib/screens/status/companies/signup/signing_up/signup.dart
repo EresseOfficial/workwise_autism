@@ -3,8 +3,11 @@ import '../../../../profile_management/login/login.dart';
 import 'mail_confirm.dart';
 import '../../../../../widgets/color_constants.dart';
 import 'company.dart';
+import '../../../../profile_management/signup/status.dart';
+
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final emailController = TextEditingController();
 final passwordController = TextEditingController();
@@ -17,12 +20,18 @@ void sendVerificationEmail() async {
   }
 }
 
-Future<void> registerUser(String email, String password) async {
+Future<void> registerUser(String email, String password, int status) async {
   try {
     UserCredential userCredential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
     print('User registered: ${userCredential.user}');
     sendVerificationEmail();
+
+    // save status
+    FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
+      'status': status,
+    });
+
   } on FirebaseAuthException catch (e) {
     print('Error: $e');
   }
@@ -36,6 +45,9 @@ bool _obscureConfirmPassword = true;
 bool _isLoading = false;
 
 class Signup extends StatefulWidget {
+  final int? status;
+
+  Signup({Key? key, this.status}) : super(key: key);
   @override
   _SignupState createState() => _SignupState();
 }
@@ -48,6 +60,7 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.status);
     return Scaffold(
       backgroundColor: ColorConstants.greyDark,
       body: Column(
@@ -157,7 +170,7 @@ class _SignupState extends State<Signup> {
             child: ElevatedButton(
               onPressed: () {
                 if (passwordController.text == confirmPasswordController.text) {
-                  registerUser(emailController.text, passwordController.text);
+                  registerUser(emailController.text, passwordController.text, widget.status!);
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => MailConfirm()),
