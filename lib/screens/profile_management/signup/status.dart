@@ -21,9 +21,11 @@ class _StatusState extends State<Status> {
     });
   }
 
+  /* BACKUP CODE (if new one doesn't work)
   void _navigateToNextPage(BuildContext context) {
     switch (_selectedStatus) {
       case 1:
+        print('Selected status before navigation: $_selectedStatus');
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => autism_signup.Signup(status: _selectedStatus)),
         );
@@ -44,6 +46,36 @@ class _StatusState extends State<Status> {
         );
         break;
     }
+  }
+   */
+
+  void _navigateToNextPage(BuildContext context) {
+    Widget nextPage = Container();
+
+    switch (_selectedStatus) {
+      case 1:
+        nextPage = autism_signup.Signup(status: _selectedStatus);
+        break;
+    }
+    switch (_selectedStatus) {
+      case 2:
+        nextPage = maybe_with_autism.Signup(status: _selectedStatus);
+        break;
+    }
+    // switch (_selectedStatus) {
+    //   case 3:
+    //     nextPage = job_company.Signup(status: _selectedStatus);
+    //     break;
+    // }
+    switch (_selectedStatus) {
+      case 4:
+        nextPage = family_signup.Signup(status: _selectedStatus);
+        break;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => nextPage),
+    );
   }
 
   @override
@@ -212,6 +244,13 @@ class _StatusState extends State<Status> {
                     ),
                     onPressed: () {
                       if (_selectedStatus != null) {
+                        _navigateToNextPage(context);
+                      }
+                    },
+
+                    /* BACKUP CODE (if new one doesn't work)
+                    onPressed: () {
+                      if (_selectedStatus != null) {
                         switch (_selectedStatus) {
                           case 1:
                             Navigator.of(context).push(MaterialPageRoute(
@@ -238,6 +277,7 @@ class _StatusState extends State<Status> {
                         }
                       }
                     },
+                    */
                     child: const Text(
                       'Suivant',
                       style: TextStyle(fontSize: 20, color: Colors.black),

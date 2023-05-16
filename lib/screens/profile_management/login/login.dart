@@ -13,6 +13,8 @@ final _emailController = TextEditingController();
 final _passwordController = TextEditingController();
 final _auth = FirebaseAuth.instance;
 
+bool _obscurePassword = true;
+
 Future<void> _signInWithEmailAndPassword() async {
   try {
     final userCredential = await _auth.signInWithEmailAndPassword(
@@ -115,6 +117,7 @@ class _LoginState extends State<Login> {
                 Container(
                   width: 300,
                   child: TextField(
+                    obscureText: _obscurePassword,
                     controller: _passwordController,
                     decoration: InputDecoration(
                       hintText: "Mot de passe",
@@ -122,6 +125,17 @@ class _LoginState extends State<Login> {
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
                       ),
                     ),
                   ),

@@ -18,7 +18,7 @@ void sendVerificationEmail() async {
   }
 }
 
-Future<void> registerUser(String email, String password, int status) async {
+Future<void> registerUser(String email, String password, int? status) async {
   try {
     UserCredential userCredential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
@@ -169,8 +169,9 @@ class _SignupState extends State<Signup> {
             height: 50,
             child: ElevatedButton(
               onPressed: () {
+                print('Status before registerUser call: ${widget.status}');
                 if (passwordController.text == confirmPasswordController.text) {
-                  registerUser(_emailController.text, _passwordController.text, widget.status!);
+                  registerUser(_emailController.text, passwordController.text, widget.status);
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => MailConfirm()),

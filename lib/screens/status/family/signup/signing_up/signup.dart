@@ -169,7 +169,7 @@ class _SignupState extends State<Signup> {
             child: ElevatedButton(
               onPressed: () {
                 if (passwordController.text == confirmPasswordController.text) {
-                  registerUser(emailController.text, passwordController.text, widget.status!);
+                  registerUser(_emailController.text, passwordController.text, widget.status!);
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => MailConfirm()),
