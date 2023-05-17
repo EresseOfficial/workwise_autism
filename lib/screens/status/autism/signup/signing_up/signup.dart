@@ -53,12 +53,18 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  bool _isLoading = false;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     print(widget.status);
     return Scaffold(
@@ -177,7 +183,9 @@ class _SignupState extends State<Signup> {
                         builder: (context) => MailConfirm()),
                   );
                 } else {
-                  // Afficher un message d'erreur pour informer l'utilisateur que les mots de passe ne correspondent pas
+                  // Passwords do not match
+                  final snackBar = SnackBar(content: Text('Les mots de passe ne correspondent pas.'));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
               },
               child: Text(

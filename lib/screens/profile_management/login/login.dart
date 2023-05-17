@@ -15,20 +15,6 @@ final _auth = FirebaseAuth.instance;
 
 bool _obscurePassword = true;
 
-Future<void> _signInWithEmailAndPassword() async {
-  try {
-    final userCredential = await _auth.signInWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
-    // redirect user to home page
-    print("Connexion réussie pour l'utilisateur : ${userCredential.user!.email}");
-  } on FirebaseAuthException catch (e) {
-    print("Erreur lors de la connexion : $e");
-    // display error message to user
-  }
-}
-
 /* Replace function _signInWithEmailAndPassword() with this below later */
 // Future<void> _signInWithEmailAndPassword() async {
 //   try {
@@ -62,6 +48,42 @@ class _LoginState extends State<Login> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _signInWithEmailAndPassword() async {
+    try {
+      final userCredential = await _auth.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      // redirect user to home page
+      // Fetch the user's status from Firestore
+      final doc = await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).get();
+      final userStatus = doc.get('status') as int;
+
+      // Based on userStatus, redirect user to different home pages
+      if (userStatus == 1) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => autism_homepage.Homepage()),
+        );
+      } else if (userStatus == 2) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => maybe_with_autism_homepage.Homepage()),
+        );
+      } /* else if (userStatus == 3) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => job_company_homepage.Homepage()),
+      );
+    } */ else if (userStatus == 4) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => family_homepage.Homepage()),
+        );
+      }
+      print("Connexion réussie pour l'utilisateur : ${userCredential.user!.email}");
+    } on FirebaseAuthException catch (e) {
+      print("Erreur lors de la connexion : $e");
+      // display error message to user
+    }
   }
 
   Widget build(BuildContext context) {
