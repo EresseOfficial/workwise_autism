@@ -20,23 +20,6 @@ void sendVerificationEmail() async {
   }
 }
 
-Future<void> registerUser(String email, String password, int status) async {
-  try {
-    UserCredential userCredential = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email, password: password);
-    print('User registered: ${userCredential.user}');
-    sendVerificationEmail();
-
-    // save status
-    FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
-      'status': status,
-    });
-
-  } on FirebaseAuthException catch (e) {
-    print('Error: $e');
-  }
-}
-
 // bool password
 bool _obscurePassword = true;
 bool _obscureConfirmPassword = true;
@@ -57,6 +40,57 @@ class _SignupState extends State<Signup> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+
+  Future<void> registerUser(String email, String password, int? status) async {
+    // Check if email is empty
+    if (_emailController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("L'e-mail ne peut pas être vide."),
+        ),
+      );
+      return;
+    }
+    // Check if email contains @
+    if (!_emailController.text.contains('@')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("L'e-mail doit contenir un '@'."),
+        ),
+      );
+      return;
+    }
+
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      print('User registered: ${userCredential.user}');
+      sendVerificationEmail();
+
+      // save status
+      FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
+        'status': status,
+      });
+
+    } on FirebaseAuthException catch (e) {
+      String message;
+      if (e.code == 'weak-password') {
+        message = "Le mot de passe fourni est trop faible.";
+      } else if (e.code == 'email-already-in-use') {
+        message = "Le compte existe déjà pour cet e-mail.";
+      } else if (e.code == 'invalid-email') {
+        message = "L'e-mail fourni est invalide.";
+      } else {
+        message = "Une erreur s'est produite lors de l'inscription.";
+      }
+      print(message);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

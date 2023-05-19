@@ -81,8 +81,20 @@ class _LoginState extends State<Login> {
       }
       print("Connexion réussie pour l'utilisateur : ${userCredential.user!.email}");
     } on FirebaseAuthException catch (e) {
-      print("Erreur lors de la connexion : $e");
-      // display error message to user
+      String message;
+      if (e.code == 'user-not-found') {
+        message = "Aucun utilisateur trouvé pour cet email.";
+      } else if (e.code == 'wrong-password') {
+        message = "Mot de passe incorrect.";
+      } else {
+        message = "Une erreur s'est produite lors de la connexion.";
+      }
+      print(message);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+        ),
+      );
     }
   }
 
