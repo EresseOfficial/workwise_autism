@@ -28,6 +28,20 @@ Future<void> saveFullName(String lastName, String firstName) async {
   }
 }
 
+Future<DocumentSnapshot> getUserProfileData() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    try {
+      DocumentSnapshot userData = await users.doc(user.uid).get();
+      return userData;
+    } catch (e) {
+      print('Error getting user profile data: $e');
+    }
+  }
+  throw Exception('No user logged in');
+}
+
 
 
 final TextEditingController _lastNameController = TextEditingController();

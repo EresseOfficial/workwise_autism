@@ -40,7 +40,7 @@ class _SignupState extends State<Signup> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
-  Future<void> registerUser(String email, String password, int? status) async {
+  Future<bool> registerUser(String email, String password, int? status) async {
     // Check if email is empty
     if (_emailController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -48,7 +48,7 @@ class _SignupState extends State<Signup> {
           content: Text("L'e-mail ne peut pas être vide."),
         ),
       );
-      return;
+      return Future.value(false);
     }
     // Check if email contains @
     if (!_emailController.text.contains('@')) {
@@ -57,7 +57,7 @@ class _SignupState extends State<Signup> {
           content: Text("L'e-mail doit contenir un '@'."),
         ),
       );
-      return;
+      return Future.value(false);
     }
 
     try {
@@ -70,6 +70,8 @@ class _SignupState extends State<Signup> {
       FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
         'status': status,
       });
+
+      return Future.value(true);
 
     } on FirebaseAuthException catch (e) {
       String message;
@@ -88,6 +90,7 @@ class _SignupState extends State<Signup> {
           content: Text(message),
         ),
       );
+      return Future.value(false);
     }
   }
 
@@ -201,15 +204,27 @@ class _SignupState extends State<Signup> {
             width: 300,
             height: 50,
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                print('Status before registerUser call: ${widget.status}');
                 if (passwordController.text == confirmPasswordController.text) {
-                  registerUser(_emailController.text, passwordController.text, widget.status!);
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => MailConfirm()),
-                  );
+                  try {
+                    bool success = await registerUser(_emailController.text, passwordController.text, widget.status);
+                    if (success) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => MailConfirm()),
+                      );
+                    } else {
+                      // Handle the error here
+                    }
+                  } catch (e) {
+                    print("Erreur lors de l'inscription : $e");
+                    // Handle the error (if any) here
+                  }
                 } else {
-                  // Afficher un message d'erreur pour informer l'utilisateur que les mots de passe ne correspondent pas
+                  // Passwords do not match
+                  final snackBar = SnackBar(content: Text('Les mots de passe ne correspondent pas.'));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
               },
               child: Text(

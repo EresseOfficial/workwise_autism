@@ -17,6 +17,27 @@ Future<void> updateUserBirthDate(DateTime birthDate) async {
   }
 }
 
+Future<int> getUserAge() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    try {
+      DocumentSnapshot userData = await users.doc(user.uid).get();
+      DateTime birthDate = (userData['birthDate'] as Timestamp).toDate();
+      final now = DateTime.now();
+      int years = now.year - birthDate.year;
+      if (birthDate.month > now.month || (birthDate.month == now.month && birthDate.day > now.day)) {
+        years--;
+      }
+      return years;
+    } catch (e) {
+      print('Error getting user age: $e');
+    }
+  }
+  throw Exception('No user logged in');
+}
+
+
 class BirthDate extends StatefulWidget {
   @override
   _BirthDateState createState() => _BirthDateState();

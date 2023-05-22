@@ -19,7 +19,7 @@ class _HomepageState extends State<Homepage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(height: 100),
+          SizedBox(height: 0),
 
           // text accueil and chat icon
           Container(

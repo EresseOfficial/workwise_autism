@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import '../../../../widgets/color_constants.dart';
 import '../../../authentication.dart';
 
+// importing user details
+import '../signup/profile_creation/full_name.dart';
+import '../signup/profile_creation/birthdate.dart';
+
 import 'homepage.dart';
 import 'search.dart' as autism_search;
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -18,9 +25,7 @@ class _ProfileState extends State<Profile> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-
-
-
+          SizedBox(height: 0),
           // title and chat icon
           Container(
             child: Row(
@@ -83,22 +88,53 @@ class _ProfileState extends State<Profile> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                            "John Doe",
-                            style: TextStyle(
-                              color: ColorConstants.blueDark,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                            ),
+                          // full name
+                          FutureBuilder(
+                            future: getUserProfileData(),
+                            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done) {
+                                String firstName = snapshot.data!['firstName'] ?? '';
+                                String lastName = snapshot.data!['lastName'] ?? '';
+                                return Text(
+                                  '$firstName $lastName',
+                                  style: TextStyle(
+                                    color: ColorConstants.blueDark,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                );
+                              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Text('Erreur : ${snapshot.error}');
+                              } else {
+                                return Text('No data');
+                              }
+                            },
                           ),
-                          Text(
-                            "Age: 25",
-                            style: TextStyle(
-                              color: ColorConstants.blueDark,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
+                          FutureBuilder(
+                            future: getUserAge(),
+                            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done) {
+                                int age = snapshot.data!;
+                                return Text(
+                                  'Age: $age',
+                                  style: TextStyle(
+                                    color: ColorConstants.blueDark,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                );
+                              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Text('Erreur : ${snapshot.error}');
+                              } else {
+                                return Text('No data');
+                              }
+                            },
                           ),
+
                           Text(
                             "Location: London, UK",
                             style: TextStyle(
