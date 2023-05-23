@@ -72,86 +72,102 @@ class _ProfileState extends State<Profile> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        // backgroundImage
-                      ),
-                    ],
-                  ),
+                FutureBuilder(
+                    future: FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).get(),
+                    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasData) {
+                        Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                        return Container(
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 50,
+                                backgroundImage: NetworkImage(data['profile_picture']),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    }
                 ),
-                Container(
-                  child: Row(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          // full name
-                          FutureBuilder(
-                            future: getUserProfileData(),
-                            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done) {
-                                String firstName = snapshot.data!['firstName'] ?? '';
-                                String lastName = snapshot.data!['lastName'] ?? '';
-                                return Text(
-                                  '$firstName $lastName',
-                                  style: TextStyle(
-                                    color: ColorConstants.blueDark,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                );
-                              } else if (snapshot.connectionState == ConnectionState.waiting) {
-                                return CircularProgressIndicator();
-                              } else if (snapshot.hasError) {
-                                return Text('Erreur : ${snapshot.error}');
-                              } else {
-                                return Text('No data');
-                              }
-                            },
-                          ),
-                          FutureBuilder(
-                            future: getUserAge(),
-                            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done) {
-                                int age = snapshot.data!;
-                                return Text(
-                                  'Age: $age',
-                                  style: TextStyle(
-                                    color: ColorConstants.blueDark,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                );
-                              } else if (snapshot.connectionState == ConnectionState.waiting) {
-                                return CircularProgressIndicator();
-                              } else if (snapshot.hasError) {
-                                return Text('Erreur : ${snapshot.error}');
-                              } else {
-                                return Text('No data');
-                              }
-                            },
-                          ),
+                SizedBox(width: 15),
 
-                          Text(
-                            "Location: London, UK",
-                            style: TextStyle(
-                              color: ColorConstants.blueDark,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          Text(
-                            "Spoken languages: English, French",
-                            style: TextStyle(
-                              color: ColorConstants.blueDark,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
+                // user details
+                Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                      // get full name from firestore
+                      FutureBuilder(
+                        future: getUserProfileData(),
+                        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            String firstName = snapshot.data!['firstName'] ?? '';
+                            String lastName = snapshot.data!['lastName'] ?? '';
+                            return Text(
+                              '$firstName $lastName',
+                              style: TextStyle(
+                                color: ColorConstants.blueDark,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            );
+                          } else if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Erreur : ${snapshot.error}');
+                          } else {
+                            return Text('No data');
+                          }
+                        },
+                      ),
+
+                      // get user age from firestore
+                      FutureBuilder(
+                        future: getUserAge(),
+                        builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            int age = snapshot.data!;
+                            return Text(
+                              'Age : $age',
+                              style: TextStyle(
+                                color: ColorConstants.blueDark,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            );
+                          } else if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Erreur : ${snapshot.error}');
+                          } else {
+                            return Text('No data');
+                          }
+                        },
+                      ),
+
+                      // get user location from firestore (city, country)
+                      Text(
+                        "France",
+                        style: TextStyle(
+                          color: ColorConstants.blueDark,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+
+                      // get user spoken languages from firestore
+                      Text(
+                        "Langues parlées : Français, Anglais",
+                        style: TextStyle(
+                          color: ColorConstants.blueDark,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ],
                   ),
@@ -161,17 +177,82 @@ class _ProfileState extends State<Profile> {
             padding: EdgeInsets.only(left: 10, right: 10),
           ),
 
-          // button: modifier profile
+          // buttons: modifier profile, partager, chat
           Container(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
                   child: Row(
                     children: [
-                      ElevatedButton(
-                        child: Text("Modifier profile"),
-                        onPressed: () {},
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        color: ColorConstants.blueDark,
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => Authentication(),
+                            ),
+                          );
+                        },
+                      ),
+                      Text(
+                        "Modifier",
+                        style: TextStyle(
+                          color: ColorConstants.blueDark,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.share),
+                        color: ColorConstants.blueDark,
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => Authentication(),
+                            ),
+                          );
+                        },
+                      ),
+                      Text(
+                        "Partager",
+                        style: TextStyle(
+                          color: ColorConstants.blueDark,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.chat),
+                        color: ColorConstants.blueDark,
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => Authentication(),
+                            ),
+                          );
+                        },
+                      ),
+                      Text(
+                        "Chat",
+                        style: TextStyle(
+                          color: ColorConstants.blueDark,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ],
                   ),
@@ -180,6 +261,8 @@ class _ProfileState extends State<Profile> {
             ),
             padding: EdgeInsets.only(left: 10, right: 10),
           ),
+
+
           // details section: Centre d'intérêts spécifiques, compétences, niveau d'études, permis
           // in a blueLight box
           Container(
