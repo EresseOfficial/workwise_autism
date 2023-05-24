@@ -23,6 +23,17 @@ Future<void> updateUserEducationLevel(String uid, int educationLevel) async {
 }
 
 /* AUTISM SIGN UP DATA */
+// adding skills to user in firestore
+Future<void> updateUserSkills(String uid, List<String> skills) async {
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+  return users
+      .doc(uid)
+      .update({'skills': skills})
+      .then((value) => print("User skills updated"))
+      .catchError((error) => print("Failed to update user skills: $error"));
+}
+
 // adding interests to user in firestore
 Future<void> updateUserInterests(String uid, List<String> interests) async {
   CollectionReference users = FirebaseFirestore.instance.collection('users');

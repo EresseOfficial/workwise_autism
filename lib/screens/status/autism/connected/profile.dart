@@ -80,10 +80,10 @@ class _ProfileState extends State<Profile> {
                         return Container(
                           child: Row(
                             children: [
-                              CircleAvatar(
-                                radius: 50,
-                                backgroundImage: NetworkImage(data['profile_picture']),
-                              ),
+                              // CircleAvatar(
+                              //   radius: 50,
+                              //   backgroundImage: NetworkImage(data['profile_picture']),
+                              // ),
                             ],
                           ),
                         );
@@ -278,13 +278,26 @@ class _ProfileState extends State<Profile> {
                           color: ColorConstants.blueLight,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Text(
-                          "Compétences",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              // textAlign: TextAlign.left,
+                              "Centres d'intérêts spécifiques",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              textAlign: TextAlign.left,
+                              "Niveau d'études",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        )
                       ),
                     ],
                   ),

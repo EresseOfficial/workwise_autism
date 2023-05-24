@@ -3,6 +3,7 @@ import '../../../../../widgets/color_constants.dart';
 import '../../../../authentication.dart';
 import '../signing_up/signup.dart';
 import 'interest.dart';
+import 'skill.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -265,7 +266,7 @@ class _EducationLvlState extends State<EducationLvl> {
                       print("Niveau de scolarité sélectionné : $_selectedEducationLvl");
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => Interest(uid: FirebaseAuth.instance.currentUser!.uid)),
+                            builder: (context) => Skill(uid: FirebaseAuth.instance.currentUser!.uid)),
                       );
                     },
                     child: const Text(

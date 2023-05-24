@@ -4,7 +4,12 @@ import '../../../authentication.dart';
 import '../../autism/signup/signing_up/signup.dart';
 import 'profile.dart';
 
+// bottom pages
+import 'homepage.dart' as autism_homepage;
 import 'search.dart' as autism_search;
+// import 'create_post.dart' as autism_create_post;
+import 'notifications.dart' as autism_notifications;
+import 'profile.dart' as autism_profile;
 
 class Homepage extends StatefulWidget {
   @override
@@ -12,6 +17,24 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  int _currrentIndex = 0;
+  final PageController _pageController = PageController();
+
+  List<Widget> _pages = <Widget>[
+    autism_homepage.Homepage(),
+    autism_search.Search(),
+    // autism_create_post.CreatePost(),
+    autism_notifications.Notifications(),
+    autism_profile.Profile(),
+  ];
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currrentIndex = index;
+    });
+    _pageController.jumpToPage(index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,8 +125,8 @@ class _HomepageState extends State<Homepage> {
                               backgroundColor: MaterialStateProperty.all<Color>(ColorConstants.blueLight),
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                              ))),
+                                    borderRadius: BorderRadius.circular(18.0),
+                                  ))),
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
