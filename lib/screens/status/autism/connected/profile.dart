@@ -330,6 +330,7 @@ class _ProfileState extends State<Profile> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+
                             // list of interests from firestore
                             FutureBuilder(
                               future: getUserInterests(),
@@ -362,6 +363,7 @@ class _ProfileState extends State<Profile> {
                                 }
                               },
                             ),
+                            SizedBox(height: 10),
                             Text(
                               // textAlign: TextAlign.left,
                               "Compétences",
