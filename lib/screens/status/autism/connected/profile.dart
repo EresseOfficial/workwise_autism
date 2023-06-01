@@ -17,6 +17,48 @@ class Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
 }
 
+// get user interests from firestore
+Future<List<String>> getUserInterests() async {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final User? user = auth.currentUser;
+  final uid = user!.uid;
+
+  List<String> interests = [];
+
+  await FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      interests = List.from(documentSnapshot.get('interests'));
+    }
+  });
+
+  return interests;
+}
+
+// get user skills from firestore
+Future<List<String>> getUserSkills() async {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final User? user = auth.currentUser;
+  final uid = user!.uid;
+
+  List<String> skills = [];
+
+  await FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      skills = List.from(documentSnapshot.get('skills'));
+    }
+  });
+
+  return skills;
+}
+
 class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
@@ -288,6 +330,79 @@ class _ProfileState extends State<Profile> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                            // list of interests from firestore
+                            FutureBuilder(
+                              future: getUserInterests(),
+                              builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done) {
+                                  List<String> interests = snapshot.data!;
+                                  return Container(
+                                    child: Wrap(
+                                      children: [
+                                        for (var interest in interests)
+                                          Container(
+                                            child: Text(
+                                              interest,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            padding: EdgeInsets.all(5),
+                                          ),
+                                      ],
+                                    ),
+                                  );
+                                } else if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Erreur : ${snapshot.error}');
+                                } else {
+                                  return Text('No data');
+                                }
+                              },
+                            ),
+                            Text(
+                              // textAlign: TextAlign.left,
+                              "Compétences",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            // list of skills from firestore
+                            // FutureBuilder(
+                            //   future: getUserSkills(),
+                            //   builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                            //     if (snapshot.connectionState == ConnectionState.done) {
+                            //       List<String> skills = snapshot.data!;
+                            //       return Container(
+                            //         child: Wrap(
+                            //           children: [
+                            //             for (var skill in skills)
+                            //               Container(
+                            //                 child: Text(
+                            //                   skill,
+                            //                   style: TextStyle(
+                            //                     fontSize: 14,
+                            //                     fontWeight: FontWeight.w400,
+                            //                   ),
+                            //                 ),
+                            //                 padding: EdgeInsets.all(5),
+                            //               ),
+                            //           ],
+                            //         ),
+                            //       );
+                            //     } else if (snapshot.connectionState == ConnectionState.waiting) {
+                            //       return CircularProgressIndicator();
+                            //     } else if (snapshot.hasError) {
+                            //       return Text('Erreur : ${snapshot.error}');
+                            //     } else {
+                            //       return Text('No data');
+                            //     }
+                            //   },
+                            // ),
+
                             Text(
                               textAlign: TextAlign.left,
                               "Niveau d'études",
