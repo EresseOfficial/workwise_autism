@@ -9,8 +9,15 @@ import '../signup/profile_creation/birthdate.dart';
 import 'homepage.dart';
 import 'search.dart' as autism_search;
 
+import '../connected/create_post/photoPost/photo_select.dart';
+import '../connected/create_post/videoPost/video_select.dart';
+import '../connected/create_post/linkPost/link_select.dart';
+import '../connected/create_post/requestAccessPage.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -60,6 +67,36 @@ Future<List<String>> getUserSkills() async {
 }
 
 class _ProfileState extends State<Profile> {
+  List<Asset> images = <Asset>[];
+
+  Future<void> loadAssets() async {
+    List<Asset> resultList = <Asset>[];
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 50,
+        enableCamera: true,
+        selectedAssets: images,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        materialOptions: MaterialOptions(
+          actionBarColor: "#9fdbf5",
+          actionBarTitle: "Créer un post",
+          allViewTitle: "All Photos",
+          useDetailsView: false,
+          selectCircleStrokeColor: "#000000",
+        ),
+      );
+    } catch (e) {
+      print(e);
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      images = resultList;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,6 +129,17 @@ class _ProfileState extends State<Profile> {
                     children: [
                       IconButton(
                         icon: Icon(Icons.chat),
+                        color: ColorConstants.blueDark,
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => Authentication(),
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.settings),
                         color: ColorConstants.blueDark,
                         onPressed: () {
                           Navigator.of(context).push(
@@ -534,8 +582,45 @@ class _ProfileState extends State<Profile> {
                       IconButton(
                         icon: Icon(Icons.add),
                         color: ColorConstants.blueDark,
-                        onPressed: () {},
+                        onPressed: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext bc) {
+                                return SafeArea(
+                                  child: Container(
+                                    child: new Wrap(
+                                      children: <Widget>[
+                                        new ListTile(
+                                            leading: new Icon(Icons.photo_library),
+                                            title: new Text('Photo'),
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              loadAssets(); // Ceci est la nouvelle ligne de code
+                                            }
+                                        ),
+                                        new ListTile(
+                                            leading: new Icon(Icons.videocam),
+                                            title: new Text('Vidéo'),
+                                            onTap: () {
+                                              // Ajoutez ici votre code pour la sélection de vidéo
+                                            }
+                                        ),
+                                        new ListTile(
+                                            leading: new Icon(Icons.link),
+                                            title: new Text('Lien'),
+                                            onTap: () {
+                                              // Ajoutez ici votre code pour la sélection de lien
+                                            }
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                          );
+                        },
                       ),
+
                     ],
                   ),
                 ),
