@@ -67,35 +67,37 @@ Future<List<String>> getUserSkills() async {
 }
 
 class _ProfileState extends State<Profile> {
-  List<Asset> images = <Asset>[];
+  List<Asset> _images = <Asset>[];
 
   Future<void> loadAssets() async {
     List<Asset> resultList = <Asset>[];
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 50,
-        enableCamera: true,
-        selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
-        materialOptions: MaterialOptions(
-          actionBarColor: "#9fdbf5",
-          actionBarTitle: "Créer un post",
-          allViewTitle: "All Photos",
-          useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
-        ),
+        maxImages: 1,
       );
-    } catch (e) {
+    } on Exception catch (e) {
       print(e);
     }
 
     if (!mounted) return;
 
     setState(() {
-      images = resultList;
+      _images = resultList;
     });
+
+    if (_images.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PhotoSelect(
+            image: _images[0],
+          ),
+        ),
+      );
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -591,13 +593,13 @@ class _ProfileState extends State<Profile> {
                                     child: new Wrap(
                                       children: <Widget>[
                                         new ListTile(
-                                            leading: new Icon(Icons.photo_library),
-                                            title: new Text('Photo'),
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                              loadAssets(); // Ceci est la nouvelle ligne de code
-                                            }
+                                          leading: new Icon(Icons.photo_library),
+                                          title: new Text('Photo'),
+                                          onTap: () {
+                                            loadAssets();
+                                          },
                                         ),
+
                                         new ListTile(
                                             leading: new Icon(Icons.videocam),
                                             title: new Text('Vidéo'),

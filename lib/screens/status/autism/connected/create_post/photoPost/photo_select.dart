@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../../../../../widgets/color_constants.dart';
 import '../../../../../authentication.dart';
+import 'package:insta_assets_picker/insta_assets_picker.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class PhotoSelect extends StatefulWidget {
+  final Asset image;
+
+  PhotoSelect({required this.image});
+
   @override
   _PhotoSelectState createState() => _PhotoSelectState();
 }
