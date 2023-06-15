@@ -4,6 +4,23 @@ import '../../../../widgets/color_constants.dart';
 import '../../../authentication.dart';
 import 'profile.dart';
 
+// bottom pages
+import 'homepage.dart' as autism_homepage;
+import 'search.dart' as autism_search;
+// import 'create_post.dart' as autism_create_post;
+import 'notifications.dart' as autism_notifications;
+import 'profile.dart' as autism_profile;
+
+import '../connected/create_post/photoPost/photo_select.dart';
+import '../connected/create_post/videoPost/video_select.dart';
+import '../connected/create_post/linkPost/link_select.dart';
+import '../connected/create_post/requestAccessPage.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
+
 import 'search.dart' as autism_search;
 
 class Search extends StatefulWidget {
@@ -12,6 +29,36 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  List<Asset> _images = <Asset>[];
+
+  Future<void> loadAssets() async {
+    List<Asset> resultList = <Asset>[];
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 1,
+      );
+    } on Exception catch (e) {
+      print(e);
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _images = resultList;
+    });
+
+    if (_images.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PhotoSelect(
+            image: _images[0],
+          ),
+        ),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,7 +249,43 @@ class _SearchState extends State<Search> {
                       IconButton(
                         icon: Icon(Icons.add),
                         color: ColorConstants.blueDark,
-                        onPressed: () {},
+                        onPressed: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext bc) {
+                                return SafeArea(
+                                  child: Container(
+                                    child: new Wrap(
+                                      children: <Widget>[
+                                        new ListTile(
+                                          leading: new Icon(Icons.photo_library),
+                                          title: new Text('Photo'),
+                                          onTap: () {
+                                            loadAssets();
+                                          },
+                                        ),
+
+                                        new ListTile(
+                                            leading: new Icon(Icons.videocam),
+                                            title: new Text('Vidéo'),
+                                            onTap: () {
+                                              // Ajoutez ici votre code pour la sélection de vidéo
+                                            }
+                                        ),
+                                        new ListTile(
+                                            leading: new Icon(Icons.link),
+                                            title: new Text('Lien'),
+                                            onTap: () {
+                                              // Ajoutez ici votre code pour la sélection de lien
+                                            }
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                          );
+                        },
                       ),
                     ],
                   ),
