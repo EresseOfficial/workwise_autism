@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workwise_autism/screens/status/autism/connected/chat/chat_menu.dart';
 import '../../../../widgets/color_constants.dart';
 import '../../../authentication.dart';
 import '../../autism/signup/signing_up/signup.dart';
@@ -113,7 +114,7 @@ class _HomepageState extends State<Homepage> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => Authentication(),
+                              builder: (context) => ChatMenu(),
                             ),
                           );
                         },
