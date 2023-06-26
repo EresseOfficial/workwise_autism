@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workwise_autism/screens/status/autism/connected/chat/chat_menu.dart';
 import '../../../../widgets/color_constants.dart';
 import '../../../authentication.dart';
 
@@ -135,7 +136,7 @@ class _ProfileState extends State<Profile> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => Authentication(),
+                              builder: (context) => ChatMenu(),
                             ),
                           );
                         },
@@ -333,7 +334,7 @@ class _ProfileState extends State<Profile> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => Authentication(),
+                              builder: (context) => ChatMenu(),
                             ),
                           );
                         },
