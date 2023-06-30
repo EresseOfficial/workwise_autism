@@ -17,6 +17,14 @@ class ChatMenu extends StatefulWidget {
 }
 
 class _ChatMenuState extends State<ChatMenu> {
+  User? currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    currentUser = FirebaseAuth.instance.currentUser;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,45 +32,64 @@ class _ChatMenuState extends State<ChatMenu> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(height: 0),
+          SizedBox(height: 30),
 
           // "chat" title and new chat icon button
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                child: Row(
-                  children: [
-                    Text(
-                      "Chat",
-                      style: TextStyle(
-                        color: ColorConstants.blueDark,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  "Chat",
+                  style: TextStyle(
+                    color: Colors.black, // Remplacez cela avec votre couleur personnalisée
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               Container(
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.add),
-                      color: ColorConstants.blueDark,
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ChatCreate(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
+                child: IconButton(
+                  icon: Icon(Icons.add),
+                  color: Colors.black, // Remplacez cela avec votre couleur personnalisée
+                  onPressed: () {
+                    // Ici, vous pouvez mettre la fonction pour créer une nouvelle conversation
+                  },
                 ),
               ),
-
             ],
+          ),
+
+          // Liste des conversations
+          currentUser == null ? CircularProgressIndicator() : Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('conversations')
+                  .where('participants', arrayContains: currentUser!.uid)
+                  .orderBy('lastMessageTimestamp', descending: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text('Something went wrong...'));
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot conversation = snapshot.data!.docs[index];
+                      return ListTile(
+                        title: Text(conversation['lastMessage']),
+                        subtitle: Text("Last message at ${conversation['lastMessageTimestamp']}"),
+                        onTap: () {
+                          // Vous pouvez utiliser le onTap pour naviguer vers la page de chat spécifique
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
           ),
         ],
       ),
