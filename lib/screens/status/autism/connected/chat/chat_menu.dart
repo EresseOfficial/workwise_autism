@@ -16,6 +16,37 @@ class ChatMenu extends StatefulWidget {
   _ChatMenuState createState() => _ChatMenuState();
 }
 
+class Chat {
+  final String id;
+  final String lastMessage;
+  final DateTime lastMessageTimestamp;
+  final List<String> participants;
+
+  Chat({
+    required this.id,
+    required this.lastMessage,
+    required this.lastMessageTimestamp,
+    required this.participants,
+  });
+}
+
+// Données de chat factices
+List<Chat> sampleChats = [
+  Chat(
+    id: '1',
+    lastMessage: 'Salut, comment ça va?',
+    lastMessageTimestamp: DateTime.now(),
+    participants: ['User1', 'User2'],
+  ),
+  Chat(
+    id: '2',
+    lastMessage: 'Bonjour!',
+    lastMessageTimestamp: DateTime.now(),
+    participants: ['User1', 'User3'],
+  ),
+  // Ajoutez plus de chats ici...
+];
+
 class _ChatMenuState extends State<ChatMenu> {
   User? currentUser;
 
@@ -32,7 +63,7 @@ class _ChatMenuState extends State<ChatMenu> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(height: 30),
+          SizedBox(height: 35),
 
           // "chat" title and new chat icon button
           Row(
@@ -53,7 +84,7 @@ class _ChatMenuState extends State<ChatMenu> {
                   icon: Icon(Icons.add),
                   color: Colors.black, // Remplacez cela avec votre couleur personnalisée
                   onPressed: () {
-                    // Ici, vous pouvez mettre la fonction pour créer une nouvelle conversation
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ChatCreate()));
                   },
                 ),
               ),
@@ -61,36 +92,17 @@ class _ChatMenuState extends State<ChatMenu> {
           ),
 
           // Liste des conversations
-          currentUser == null ? CircularProgressIndicator() : Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('conversations')
-                  .where('participants', arrayContains: currentUser!.uid)
-                  .orderBy('lastMessageTimestamp', descending: true)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(child: Text('Something went wrong...'));
-                } else if (snapshot.hasData && snapshot.data != null) {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot conversation = snapshot.data!.docs[index];
-                      return ListTile(
-                        title: Text(conversation['lastMessage']),
-                        subtitle: Text("Last message at ${conversation['lastMessageTimestamp']}"),
-                        onTap: () {
-                          // Vous pouvez utiliser le onTap pour naviguer vers la page de chat spécifique
-                        },
-                      );
-                    },
-                  );
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
+          /*
+          ListView.builder(
+            itemCount: sampleChats.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(sampleChats[index].participants.join(', ')),
+                subtitle: Text(sampleChats[index].lastMessage),
+              );
+            },
           ),
+          */
         ],
       ),
     );

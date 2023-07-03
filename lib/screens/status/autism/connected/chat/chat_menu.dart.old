@@ -61,7 +61,39 @@ class _ChatMenuState extends State<ChatMenu> {
                   ],
                 ),
               ),
-
+                // Code pour afficher les conversations (base de données)
+                          /*
+                          currentUser == null ? CircularProgressIndicator() : Expanded(
+                            child: StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('conversations')
+                                  .where('participants', arrayContains: currentUser!.uid)
+                                  .orderBy('lastMessageTimestamp', descending: true)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return Center(child: Text('Something went wrong...'));
+                                } else if (snapshot.hasData && snapshot.data != null) {
+                                  return ListView.builder(
+                                    itemCount: snapshot.data!.docs.length,
+                                    itemBuilder: (context, index) {
+                                      DocumentSnapshot conversation = snapshot.data!.docs[index];
+                                      return ListTile(
+                                        title: Text(conversation['lastMessage']),
+                                        subtitle: Text("Last message at ${conversation['lastMessageTimestamp']}"),
+                                        onTap: () {
+                                          // Vous pouvez utiliser le onTap pour naviguer vers la page de chat spécifique
+                                        },
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  return Center(child: CircularProgressIndicator());
+                                }
+                              },
+                            ),
+                          ),
+                           */
             ],
           ),
         ],
