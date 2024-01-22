@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>608446180656-7t95u8rldv2ia8e2cudmmb4hvg3c6r7t.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.608446180656-7t95u8rldv2ia8e2cudmmb4hvg3c6r7t</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDtDogN3JOsSfcHAAk7T_0v7soyX0OO4Dc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>608446180656</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.autismeacademie.workwiseAutism</string>
+	<key>PROJECT_ID</key>
+	<string>workwise-autism</string>
+	<key>STORAGE_BUCKET</key>
+	<string>workwise-autism.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:608446180656:ios:11f41a86495e524783acf5</string>
+</dict>
+</plist>

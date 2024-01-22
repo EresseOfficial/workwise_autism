@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "608446180656",
+    "project_id": "workwise-autism",
+    "storage_bucket": "workwise-autism.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608446180656:android:29b3d49819e7692a83acf5",
+        "android_client_info": {
+          "package_name": "com.autismeacademie.workwise_autism"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "608446180656-vkm2lp5b4slb8bmv1kahcu8ln2962j6a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgEdC3LWqxUa6ZQpYyWhRDwhRiSr6rfjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "608446180656-hlf1068q6th37kmscijeo5ogl7066tta.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "608446180656-7t95u8rldv2ia8e2cudmmb4hvg3c6r7t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.autismeacademie.workwiseAutism"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
