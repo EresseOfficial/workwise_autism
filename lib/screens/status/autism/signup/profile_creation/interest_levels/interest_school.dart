@@ -15,23 +15,115 @@ class Interest {
 
 class _InterestSchoolAutismState extends State<InterestSchoolAutism> {
   final List<Interest> interests = [
+    // level 1
     Interest('Découverte des Sciences', [
-      Interest('Sciences Naturelles'),
-      Interest('Astronomie et Espace'),
-      Interest('Physique et Chimie'),
-      Interest('Sciences de la vie'),
-      Interest('Environnement et Durabilité'),
-      Interest('Histoire et Sciences Humaines'),
+      // level 2
+      Interest('Sciences Naturelles', [
+        // level 3
+        Interest('Biologie et Étude des Organismes'),
+        Interest('Géologie et Sciences de la Terre'),
+        Interest('Astronomie et Exploration de l\'Espace'),
+        Interest('Sciences de l\'Environnement'),
+        Interest('Physique et Chimie pour Enfants'),
+        Interest('Météorologie et Climat'),
+        Interest('Anatomie Humaine et Santé'),
+        Interest('Observation de la Nature et Expériences'),
+        Interest('Découverte de l\'Univers Sous-Marin'),
+      ]),
+      Interest('Astronomie et Espace', [
+        Interest('Système Solaire'),
+        Interest('Constellations et Cartographie Céleste'),
+        Interest('Observation Astronomique'),
+        Interest('Exploration Spatiale et Vaisseaux Spatiaux'),
+        Interest('Galaxies et Univers'),
+        Interest('Astronomie dans la Culture'),
+        Interest('Phénomènes Cosmiques'),
+        Interest('Base de l\'Astronomie et de la Physique Spatiale'),
+        Interest('Projet et Activités Pratiques en Astronomie'),
+      ]),
+      Interest('Physique et Chimie', [
+        Interest('Découverte de la Matière'),
+        Interest('Force et Mouvement'),
+        Interest('Énergie et Travail'),
+        Interest('Chimie Amusante'),
+        Interest('Lumière et Son'),
+        Interest('Magnétisme et Électricité'),
+        Interest('Espace et Univers'),
+        Interest('Expériences Scientifiques'),
+        Interest('Chimie du Quotidien'),
+      ]),
+      Interest('Sciences de la vie', [
+        Interest('Anatomie Humaine et Biologie du Corps'),
+        Interest('Plantes et Botanique'),
+        Interest('Animaux et Zoologie'),
+        Interest('Écologie et Environnement'),
+        Interest('Micro-organismes et Microbiologie'),
+        Interest('Santé et Hygiène'),
+        Interest('Sciences Alimentaires'),
+        Interest('Nature et Découverte'),
+        Interest('Projets Scientifiques en Biologie'),
+      ]),
+      Interest('Environnement et Durabilité', [
+        Interest('Écosystèmes et Habitats'),
+        Interest('Changement Climatique et Impact sur l\'Environnement'),
+        Interest('Conservation et Protection de la Nature'),
+        Interest('Ressources Naturelles et Énergie Durable'),
+        Interest('Pollution et Gestion des Déchets'),
+        Interest('Agriculture et Alimentation Durables'),
+        Interest('Cycle de l\'Eau et Conservation de l\'Eau'),
+        Interest('Nature et Exploration'),
+        Interest('Sensibilisation à l\'Écologie'),
+      ]),
+      Interest('Histoire et Sciences Humaines', [
+        Interest('Histoire Locale et Familiale'),
+        Interest('Civilisations Anciennes'),
+        Interest('Géographie et Cultures du Monde'),
+        Interest('Périodes Historiques'),
+        Interest('Histoire de l\'Art'),
+        Interest('Inventions et Découvertes'),
+        Interest('Traditions et Célébrations'),
+        Interest('Économie et Vie Quotidienne'),
+        Interest('Projets et Activités en Histoire et Sciences Humaines'),
+      ]),
     ]),
     Interest('Arts et Créativité', [
-      Interest('Arts Visuels'),
-      Interest('Musique'),
-      Interest('Théàtre et Performance'),
+      Interest('Arts Visuels', [
+        Interest('Dessin et Illustration'),
+        Interest('Peinture et Couleurs'),
+        Interest('Arts et Artisanat'),
+        Interest('Photographie et Médias Visuels'),
+        Interest('Sculpture et Modelage'),
+        Interest('Art Numérique et Graphisme'),
+        Interest('Histoire de l\'Art et Artistes Célèbres'),
+        Interest('Expression Créative et Imagination'),
+        Interest('Expositions et Projets d\'Art de Groupe'),
+      ]),
+      Interest('Musique', [
+        Interest('Découverte des Instruments de Musique'),
+        Interest('Rythme et Percussions'),
+        Interest('Chant et Voix'),
+        Interest('Genres Musicaux et Histoire de la Musique'),
+        Interest('Éducation Musicale et Théorie de la Musique'),
+        Interest('Fabrication d\'Instruments Simples'),
+        Interest('Musique et Mouvement'),
+        Interest('Appréciation Musicale et Écoute Active'),
+        Interest('Projets et Performances Musicales'),
+      ]),
+      Interest('Théàtre et Performance', [
+        Interest('Initiation au Théâtre'),
+        Interest('Expression Corporelle et Mime'),
+        Interest('Marionnettes et Théâtre d\'Objets'),
+        Interest('Contes et Narration'),
+        Interest('Techniques de Scène et Présence'),
+        Interest('Costumes et Décor'),
+        Interest('Musique et Théâtre Musical'),
+        Interest('Projets de Théâtre et Performances'),
+        Interest('Appréciation du Théâtre'),
+      ]),
       Interest('Arts Manuels et Artisanat'),
       Interest('Photographie et Arts Numériques'),
       Interest('Expression Créative'),
     ]),
-
     Interest('Nature et Animaux', [
       Interest('Découverte des Animaux'),
       Interest('Observation de la Nature'),
@@ -179,12 +271,12 @@ class _InterestSchoolAutismState extends State<InterestSchoolAutism> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
+                            MaterialStateProperty.all<Color>(Colors.white),
                         shape:
-                        MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                side: BorderSide(color: Colors.white)))),
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    side: BorderSide(color: Colors.white)))),
                     onPressed: () {
                       // TODO: Implement next button functionality
                     },
@@ -203,7 +295,7 @@ class _InterestSchoolAutismState extends State<InterestSchoolAutism> {
                         backgroundColor: MaterialStateProperty.all<Color>(
                             ColorConstants.blueDark),
                         shape:
-                        MaterialStateProperty.all<RoundedRectangleBorder>(
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                               side: BorderSide(color: Colors.white)),
