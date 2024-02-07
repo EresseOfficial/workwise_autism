@@ -787,18 +787,6 @@ class _InterestCollegeAutismState extends State<InterestCollegeAutism> {
         Interest('Critique et Analyse Artistique'),
       ]),
       Interest('Projets de Recherche en Histoire et Sciences Humaines', [
-        /*
-9.7.1	Études Historiques Approfondies
-9.7.2	Anthropologie et Sociétés
-9.7.3	Projets de Recherche Thématiques
-9.7.4	Études Géographiques et Environnementales
-9.7.5	Projet de Recherche Individuel
-9.7.6	Études Sociopolitiques
-9.7.7	Ethnographie et Études de Terrain
-9.7.8	Littérature et Histoire
-9.7.9	Projets Multimédias et Présentations
-9.7.10	Collaboration et Travaux de Groupe
-         */
         Interest('Études Historiques Approfondies'),
         Interest('Anthropologie et Sociétés'),
         Interest('Projets de Recherche Thématiques'),
