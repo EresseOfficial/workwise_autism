@@ -1241,6 +1241,30 @@ class _InterestPostGraduateAutismState
 
   Interest? selectedInterest;
 
+  Interest? selectedInterestLevel1;
+  Interest? selectedInterestLevel2;
+  Interest? selectedInterestLevel3;
+  List<Interest> subInterestsLevel2 = [];
+  List<Interest> subInterestsLevel3 = [];
+
+  void _onSelectedLevel1(Interest? interest) {
+    setState(() {
+      selectedInterestLevel1 = interest;
+      subInterestsLevel2 = interest?.subInterests ?? [];
+      selectedInterestLevel2 = null;
+      subInterestsLevel3 = [];
+      selectedInterestLevel3 = null;
+    });
+  }
+
+  void _onSelectedLevel2(Interest? interest) {
+    setState(() {
+      selectedInterestLevel2 = interest;
+      subInterestsLevel3 = interest?.subInterests ?? [];
+      selectedInterestLevel3 = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1272,14 +1296,13 @@ class _InterestPostGraduateAutismState
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+                SizedBox(height: 10),
+
+                // DropdownButton for level 1 interests
                 DropdownButton<Interest>(
                   hint: Text('Sélectionnez un centre d\'intérêt'),
-                  value: selectedInterest,
-                  onChanged: (Interest? newValue) {
-                    setState(() {
-                      selectedInterest = newValue;
-                    });
-                  },
+                  value: selectedInterestLevel1,
+                  onChanged: _onSelectedLevel1,
                   items: interests
                       .map<DropdownMenuItem<Interest>>((Interest value) {
                     return DropdownMenuItem<Interest>(
@@ -1288,6 +1311,38 @@ class _InterestPostGraduateAutismState
                     );
                   }).toList(),
                 ),
+
+                // DropdownButton for level 2 interests
+                if (subInterestsLevel2.isNotEmpty)
+                  DropdownButton<Interest>(
+                    hint: Text('Sélectionnez un sous-centre d\'intérêt de niveau 2'),
+                    value: selectedInterestLevel2,
+                    onChanged: _onSelectedLevel2,
+                    items: subInterestsLevel2.map((Interest value) {
+                      return DropdownMenuItem<Interest>(
+                        value: value,
+                        child: Text(value.name),
+                      );
+                    }).toList(),
+                  ),
+
+                // DropdownButton for level 3 interests
+                if (subInterestsLevel3.isNotEmpty)
+                  DropdownButton<Interest>(
+                    hint: Text('Sélectionnez un sous-centre d\'intérêt de niveau 3'),
+                    value: selectedInterestLevel3,
+                    onChanged: (Interest? newValue) {
+                      setState(() {
+                        selectedInterestLevel3 = newValue;
+                      });
+                    },
+                    items: subInterestsLevel3.map((Interest value) {
+                      return DropdownMenuItem<Interest>(
+                        value: value,
+                        child: Text(value.name),
+                      );
+                    }).toList(),
+                  ),
               ],
             ),
           ),

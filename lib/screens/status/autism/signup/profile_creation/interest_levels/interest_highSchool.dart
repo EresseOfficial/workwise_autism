@@ -28,16 +28,6 @@ class _InterestHighSchoolAutismState extends State<InterestHighSchoolAutism> {
         Interest('Techniques Avancées et Professionnalisation'),
       ]),
       Interest('Dessin et Illustration', [
-        /*
-1.2.1	Techniques de Base et Avancées
-1.2.2	Styles et Thèmes
-1.2.3	Illustration et Bande Dessinée
-1.2.4	Dessin Numérique et Technologique
-1.2.5	Perspective et Composition
-1.2.6	Dessin et Culture
-1.2.7	Projets Personnels et Portfolios
-1.2.8	Ateliers et Expositions
-         */
         Interest('Techniques de Base et Avancées'),
         Interest('Styles et Thèmes'),
         Interest('Illustration et Bande Dessinée'),
@@ -48,16 +38,6 @@ class _InterestHighSchoolAutismState extends State<InterestHighSchoolAutism> {
         Interest('Ateliers et Expositions'),
       ]),
       Interest('Sculpture et Modelage', [
-        /*
-1.3.1	Techniques de Base et Matériaux
-1.3.2	Sculpture 3D et Modelage
-1.3.3	Sculpture Contemporaine et Thématique
-1.3.4	Sculpture Numérique et Technologique
-1.3.5	Historique et Culturel
-1.3.6	Ateliers et Expositions
-1.3.7	Projets Personnels et Portfolio
-1.3.8	Sculpture et Environnement
-         */
         Interest('Techniques de Base et Matériaux'),
         Interest('Sculpture 3D et Modelage'),
         Interest('Sculpture Contemporaine et Thématique'),
@@ -78,16 +58,6 @@ class _InterestHighSchoolAutismState extends State<InterestHighSchoolAutism> {
         Interest('Photographie et Vidéographie Expérimentale'),
       ]),
       Interest('Arts Numériques et Multimédia', [
-        /*
-1.5.1	Conception Graphique
-1.5.2	Animation Numérique
-1.5.3	Création Web et Médias Interactifs
-1.5.4	Arts Visuels Numériques
-1.5.5	Vidéographie et Production
-1.5.6	Projets Multimédias
-1.5.7	Technologie et Art
-1.5.8	Culture Numérique et Médias
-         */
         Interest('Conception Graphique'),
         Interest('Animation Numérique'),
         Interest('Création Web et Médias Interactifs'),
@@ -850,44 +820,107 @@ class _InterestHighSchoolAutismState extends State<InterestHighSchoolAutism> {
     ]),
     Interest('Sciences Humaines et Études Culturelles', [
       Interest('Histoire et Civilisations', [
-        /*
-
-         */
+        Interest('Civilisations Antiques'),
+        Interest('Périodes Médiévales et Renaissance'),
+        Interest('Révolutions et Changements Sociaux'),
+        Interest('Histoire Moderne et Contemporaine'),
+        Interest('Civilisations Non Occidentales'),
+        Interest('Archéologie et Découvertes'),
+        Interest('Thèmes Spécifiques en Histoire'),
+        Interest('Projets de Recherche Historique'),
       ]),
       Interest('Sociologie et Sciences Sociales', [
-        /*
-
-         */
+        Interest('Théories Sociologiques Fondamentales'),
+        Interest('Comportement et Interaction Sociale'),
+        Interest('Institutions Sociales et Organisation'),
+        Interest('Diversité Culturelle et Sociale'),
+        Interest('Changement Social et Innovation'),
+        Interest('Problèmes Sociaux et Politiques Publiques'),
+        Interest('Méthodes de Recherche en Sciences Sociales'),
+        Interest('Éthique et Responsabilité Sociale'),
       ]),
       Interest('Anthropologie et Études Culturelles', [
-        /*
-
-         */
+        Interest('Fondements de l\'Anthropologie'),
+        Interest('Cultures du Monde'),
+        Interest('Identité et Diversité Culturelle'),
+        Interest('Rituels, Mythes et Symboles'),
+        Interest('Changement Culturel et Globalisation'),
+        Interest('Anthropologie de l\'Alimentation'),
+        Interest('Langue et Communication dans les Cultures'),
+        Interest('Pratiques Artistiques et Culturelles'),
+        Interest('Projets de Recherche en Anthropologie'),
       ]),
       Interest('Psychologie et Comportement Humain', [
-        /*
-
-         */
+        Interest('Introduction à la Psychologie'),
+        Interest('Développement Humain'),
+        Interest('Perception et Cognition'),
+        Interest('Émotions et Intelligence Émotionnelle'),
+        Interest('Comportement Social et Communication'),
+        Interest('Psychologie Anormale'),
+        Interest('Thérapies et Interventions Psychologiques'),
+        Interest('Psychologie Expérimentale et Recherche'),
+        Interest('Bien-être Mental et Self-Care'),
       ]),
       Interest('Philosophie et Pensée Critique', [
-        /*
-
-         */
+        Interest('Introduction à la Philosophie'),
+        Interest('Logique et Raisonnement'),
+        Interest('Éthique et Morale'),
+        Interest('Philosophie Politique et Sociale'),
+        Interest('Esthétique et Philosophie de l\'Art'),
+        Interest('Philosophie de l\'Esprit et de la Conscience'),
+        Interest('Métaphysique et Ontologie'),
+        Interest('Épistémologie et Théorie de la Connaissance'),
+        Interest('Pensée Critique et Analyse'),
       ]),
       Interest('Études des Médias et de la Communication', [
-        /*
-
-         */
+        Interest('Théorie des Médias'),
+        Interest('Littératie des Médias'),
+        Interest('Communication Interpersonnelle'),
+        Interest('Production Média'),
+        Interest('Analyse du Contenu des Médias'),
+        Interest('Réseaux Sociaux et Communication Numérique'),
+        Interest('Éthique des Médias'),
+        Interest('Histoire des Médias'),
+        Interest('Publicité et Marketing des Médias'),
       ]),
       Interest('Projets de Recherche et Études', [
-        /*
-
-         */
+        Interest('Méthodologie de la Recherche'),
+        Interest('Projets Interdisciplinaires'),
+        Interest('Études Indépendantes'),
+        Interest('Participation à des Conférences et des Séminaires'),
+        Interest('Publication et Diffusion'),
+        Interest('Collaboration avec des Institutions de Recherche'),
+        Interest('Développement de Compétences en Présentation'),
+        Interest('Éthique de la Recherche'),
       ]),
     ]),
   ];
 
   Interest? selectedInterest;
+
+  Interest? selectedInterestLevel1;
+  Interest? selectedInterestLevel2;
+  Interest? selectedInterestLevel3;
+  List<Interest> subInterestsLevel2 = [];
+  List<Interest> subInterestsLevel3 = [];
+
+  void _onSelectedLevel1(Interest? interest) {
+    setState(() {
+      selectedInterestLevel1 = interest;
+      subInterestsLevel2 = interest?.subInterests ?? [];
+      selectedInterestLevel2 = null;
+      subInterestsLevel3 = [];
+      selectedInterestLevel3 = null;
+    });
+  }
+
+  void _onSelectedLevel2(Interest? interest) {
+    setState(() {
+      selectedInterestLevel2 = interest;
+      subInterestsLevel3 = interest?.subInterests ?? [];
+      selectedInterestLevel3 = null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -920,14 +953,13 @@ class _InterestHighSchoolAutismState extends State<InterestHighSchoolAutism> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+                SizedBox(height: 10),
+
+                // DropdownButton for level 1 interests
                 DropdownButton<Interest>(
                   hint: Text('Sélectionnez un centre d\'intérêt'),
-                  value: selectedInterest,
-                  onChanged: (Interest? newValue) {
-                    setState(() {
-                      selectedInterest = newValue;
-                    });
-                  },
+                  value: selectedInterestLevel1,
+                  onChanged: _onSelectedLevel1,
                   items: interests
                       .map<DropdownMenuItem<Interest>>((Interest value) {
                     return DropdownMenuItem<Interest>(
@@ -936,6 +968,38 @@ class _InterestHighSchoolAutismState extends State<InterestHighSchoolAutism> {
                     );
                   }).toList(),
                 ),
+
+                // DropdownButton for level 2 interests
+                if (subInterestsLevel2.isNotEmpty)
+                  DropdownButton<Interest>(
+                    hint: Text('Sélectionnez un sous-centre d\'intérêt de niveau 2'),
+                    value: selectedInterestLevel2,
+                    onChanged: _onSelectedLevel2,
+                    items: subInterestsLevel2.map((Interest value) {
+                      return DropdownMenuItem<Interest>(
+                        value: value,
+                        child: Text(value.name),
+                      );
+                    }).toList(),
+                  ),
+
+                // DropdownButton for level 3 interests
+                if (subInterestsLevel3.isNotEmpty)
+                  DropdownButton<Interest>(
+                    hint: Text('Sélectionnez un sous-centre d\'intérêt de niveau 3'),
+                    value: selectedInterestLevel3,
+                    onChanged: (Interest? newValue) {
+                      setState(() {
+                        selectedInterestLevel3 = newValue;
+                      });
+                    },
+                    items: subInterestsLevel3.map((Interest value) {
+                      return DropdownMenuItem<Interest>(
+                        value: value,
+                        child: Text(value.name),
+                      );
+                    }).toList(),
+                  ),
               ],
             ),
           ),
