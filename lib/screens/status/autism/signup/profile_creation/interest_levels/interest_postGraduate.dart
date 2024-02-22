@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:workwise_autism/screens/status/autism/signup/profile_creation/profile_customization.dart';
 import 'package:workwise_autism/widgets/color_constants.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class InterestPostGraduateAutism extends StatefulWidget {
   @override
@@ -1265,6 +1269,41 @@ class _InterestPostGraduateAutismState
     });
   }
 
+  Future<void> _saveInterestsToFirestore() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Check if user is signed in
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Get the user ID
+      String userId = user.uid;
+
+      Map<String, dynamic> interestsData = {
+        "interestLevel1": selectedInterestLevel1?.name,
+        "interestLevel2": selectedInterestLevel2?.name,
+        "interestLevel3": selectedInterestLevel3?.name,
+      };
+
+      // Saving the interests to Firestore
+      await firestore.collection('users').doc(userId).set({
+        "interests": interestsData
+      }, SetOptions(merge: true)).then((_) {
+        print("Interests have been saved successfully");
+
+        // Navigate to the profile customization page
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfileCustomization()),
+        );
+      }).catchError((error) {
+        print("Failed to save interests: $error");
+      });
+    } else {
+      print("User is not signed in.");
+      // TODO: Show an error message to the user
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1303,8 +1342,7 @@ class _InterestPostGraduateAutismState
                   hint: Text('Sélectionnez un centre d\'intérêt'),
                   value: selectedInterestLevel1,
                   onChanged: _onSelectedLevel1,
-                  items: interests
-                      .map<DropdownMenuItem<Interest>>((Interest value) {
+                  items: interests.map<DropdownMenuItem<Interest>>((Interest value) {
                     return DropdownMenuItem<Interest>(
                       value: value,
                       child: Text(value.name),
@@ -1313,36 +1351,36 @@ class _InterestPostGraduateAutismState
                 ),
 
                 // DropdownButton for level 2 interests
-                if (subInterestsLevel2.isNotEmpty)
-                  DropdownButton<Interest>(
-                    hint: Text('Sélectionnez un sous-centre d\'intérêt de niveau 2'),
-                    value: selectedInterestLevel2,
-                    onChanged: _onSelectedLevel2,
-                    items: subInterestsLevel2.map((Interest value) {
-                      return DropdownMenuItem<Interest>(
-                        value: value,
-                        child: Text(value.name),
-                      );
-                    }).toList(),
-                  ),
+                DropdownButton<Interest>(
+                  hint: Text('Sélectionnez un centre d\'intérêt de niveau 2'),
+                  value: selectedInterestLevel2,
+                  onChanged: selectedInterestLevel1 != null ? _onSelectedLevel2 : null,
+                  disabledHint: Text('Veuillez d\'abord choisir un C.I.S de niveau 1'),
+                  items: subInterestsLevel2.map((Interest value) {
+                    return DropdownMenuItem<Interest>(
+                      value: value,
+                      child: Text(value.name),
+                    );
+                  }).toList(),
+                ),
 
                 // DropdownButton for level 3 interests
-                if (subInterestsLevel3.isNotEmpty)
-                  DropdownButton<Interest>(
-                    hint: Text('Sélectionnez un sous-centre d\'intérêt de niveau 3'),
-                    value: selectedInterestLevel3,
-                    onChanged: (Interest? newValue) {
-                      setState(() {
-                        selectedInterestLevel3 = newValue;
-                      });
-                    },
-                    items: subInterestsLevel3.map((Interest value) {
-                      return DropdownMenuItem<Interest>(
-                        value: value,
-                        child: Text(value.name),
-                      );
-                    }).toList(),
-                  ),
+                DropdownButton<Interest>(
+                  hint: Text('Sélectionnez un centre d\'intérêt de niveau 3'),
+                  value: selectedInterestLevel3,
+                  onChanged: selectedInterestLevel2 != null ? (Interest? newValue) {
+                    setState(() {
+                      selectedInterestLevel3 = newValue;
+                    });
+                  } : null,
+                  disabledHint: Text('Veuillez d\'abord choisir un C.I.S de niveau 2'),
+                  items: subInterestsLevel3.map((Interest value) {
+                    return DropdownMenuItem<Interest>(
+                      value: value,
+                      child: Text(value.name),
+                    );
+                  }).toList(),
+                ),
               ],
             ),
           ),
@@ -1356,16 +1394,22 @@ class _InterestPostGraduateAutismState
                   height: 40,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
+                        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            // Change the button's color based on the state
+                            if (selectedInterestLevel1 != null && selectedInterestLevel2 != null && selectedInterestLevel3 != null) {
+                              return Colors.white; // Enabled
+                            }
+                            return Colors.grey; // Disabled
+                          },
+                        ),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                     side: BorderSide(color: Colors.white)))),
-                    onPressed: () {
-                      // TODO: Implement next button functionality
-                    },
+                    onPressed: (selectedInterestLevel1 != null && selectedInterestLevel2 != null && selectedInterestLevel3 != null) ?
+                    _saveInterestsToFirestore : null,
                     child: const Text(
                       'Suivant',
                       style: TextStyle(fontSize: 20, color: Colors.black),
