@@ -897,29 +897,13 @@ class _InterestSchoolAutismState extends State<InterestSchoolAutism> {
 
   Interest? selectedInterest;
 
-  Interest? selectedInterestLevel1;
-  Interest? selectedInterestLevel2;
-  Interest? selectedInterestLevel3;
+  List<Interest> selectedInterestsLevel1 = [];
+  List<Interest> selectedInterestsLevel2 = [];
+  List<Interest> selectedInterestsLevel3 = [];
+
   List<Interest> subInterestsLevel2 = [];
   List<Interest> subInterestsLevel3 = [];
 
-  void _onSelectedLevel1(Interest? interest) {
-    setState(() {
-      selectedInterestLevel1 = interest;
-      subInterestsLevel2 = interest?.subInterests ?? [];
-      selectedInterestLevel2 = null;
-      subInterestsLevel3 = [];
-      selectedInterestLevel3 = null;
-    });
-  }
-
-  void _onSelectedLevel2(Interest? interest) {
-    setState(() {
-      selectedInterestLevel2 = interest;
-      subInterestsLevel3 = interest?.subInterests ?? [];
-      selectedInterestLevel3 = null;
-    });
-  }
 
   Future<void> _saveInterestsToFirestore() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -930,10 +914,16 @@ class _InterestSchoolAutismState extends State<InterestSchoolAutism> {
       // Get the user ID
       String userId = user.uid;
 
+      // Préparation des données d'intérêts avec des listes pour chaque niveau
+      // Supposons que selectedInterestsLevel1, selectedInterestsLevel2, et selectedInterestsLevel3 sont des List<Interest>
+      List<String> interestsLevel1Names = selectedInterestsLevel1.map((interest) => interest.name).toList();
+      List<String> interestsLevel2Names = selectedInterestsLevel2.map((interest) => interest.name).toList();
+      List<String> interestsLevel3Names = selectedInterestsLevel3.map((interest) => interest.name).toList();
+
       Map<String, dynamic> interestsData = {
-        "interestLevel1": selectedInterestLevel1?.name,
-        "interestLevel2": selectedInterestLevel2?.name,
-        "interestLevel3": selectedInterestLevel3?.name,
+        "interestLevel1": interestsLevel1Names,
+        "interestLevel2": interestsLevel2Names,
+        "interestLevel3": interestsLevel3Names,
       };
 
       // Saving the interests to Firestore
@@ -956,6 +946,47 @@ class _InterestSchoolAutismState extends State<InterestSchoolAutism> {
     }
   }
 
+
+  void _showInterestSelectionDialog(List<Interest> interests, List<Interest> selectedInterests, VoidCallback onSelectionChanged) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Sélectionnez les centres d'intérêt"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: interests.map((interest) {
+                return CheckboxListTile(
+                  title: Text(interest.name),
+                  value: selectedInterests.contains(interest),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value == true && !selectedInterests.contains(interest)) {
+                        if (selectedInterests.length < 3) {
+                          selectedInterests.add(interest);
+                        }
+                      } else {
+                        selectedInterests.remove(interest);
+                      }
+                      onSelectionChanged();
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -991,49 +1022,43 @@ class _InterestSchoolAutismState extends State<InterestSchoolAutism> {
                 SizedBox(height: 10),
 
                 // DropdownButton for level 1 interests
-                DropdownButton<Interest>(
-                  hint: Text('Sélectionnez un centre d\'intérêt'),
-                  value: selectedInterestLevel1,
-                  onChanged: _onSelectedLevel1,
-                  items: interests.map<DropdownMenuItem<Interest>>((Interest value) {
-                    return DropdownMenuItem<Interest>(
-                      value: value,
-                      child: Text(value.name),
-                    );
-                  }).toList(),
+                ElevatedButton(
+                  onPressed: () => _showInterestSelectionDialog(
+                    interests, // Pour le niveau 1, utilisez la liste principale des intérêts
+                    selectedInterestsLevel1, // La liste de sélection pour le niveau 1
+                        () {
+                      // Vous pouvez ajouter du code ici si vous avez besoin de faire quelque chose immédiatement après la modification de la sélection
+                    },
+                  ),
+                  child: Text("Choisir les centres d'intérêt de niveau 1"),
                 ),
+
 
                 // DropdownButton for level 2 interests
-                DropdownButton<Interest>(
-                  hint: Text('Sélectionnez un centre d\'intérêt de niveau 2'),
-                  value: selectedInterestLevel2,
-                  onChanged: selectedInterestLevel1 != null ? _onSelectedLevel2 : null,
-                  disabledHint: Text('Veuillez d\'abord choisir un C.I.S de niveau 1'),
-                  items: subInterestsLevel2.map((Interest value) {
-                    return DropdownMenuItem<Interest>(
-                      value: value,
-                      child: Text(value.name),
-                    );
-                  }).toList(),
+                ElevatedButton(
+                  onPressed: () => _showInterestSelectionDialog(
+                    interests, // Pour le niveau 1, utilisez la liste principale des intérêts
+                    selectedInterestsLevel2, // La liste de sélection pour le niveau 1
+                        () {
+                      // Vous pouvez ajouter du code ici si vous avez besoin de faire quelque chose immédiatement après la modification de la sélection
+                    },
+                  ),
+                  child: Text("Choisir les centres d'intérêt de niveau 2"),
                 ),
 
+
                 // DropdownButton for level 3 interests
-                DropdownButton<Interest>(
-                  hint: Text('Sélectionnez un centre d\'intérêt de niveau 3'),
-                  value: selectedInterestLevel3,
-                  onChanged: selectedInterestLevel2 != null ? (Interest? newValue) {
-                    setState(() {
-                      selectedInterestLevel3 = newValue;
-                    });
-                  } : null,
-                  disabledHint: Text('Veuillez d\'abord choisir un C.I.S de niveau 2'),
-                  items: subInterestsLevel3.map((Interest value) {
-                    return DropdownMenuItem<Interest>(
-                      value: value,
-                      child: Text(value.name),
-                    );
-                  }).toList(),
-                ),
+                ElevatedButton(
+                  onPressed: () => _showInterestSelectionDialog(
+                    interests, // Pour le niveau 1, utilisez la liste principale des intérêts
+                    selectedInterestsLevel3, // La liste de sélection pour le niveau 1
+                        () {
+                      // Vous pouvez ajouter du code ici si vous avez besoin de faire quelque chose immédiatement après la modification de la sélection
+                    },
+                  ),
+                  child: Text("Choisir les centres d'intérêt de niveau 3"),
+                )
+
               ],
             ),
           ),
@@ -1050,7 +1075,7 @@ class _InterestSchoolAutismState extends State<InterestSchoolAutism> {
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                             (Set<MaterialState> states) {
                           // Change the button's color based on the state
-                          if (selectedInterestLevel1 != null && selectedInterestLevel2 != null && selectedInterestLevel3 != null) {
+                          if (selectedInterestsLevel1.isNotEmpty && selectedInterestsLevel2.isNotEmpty && selectedInterestsLevel3.isNotEmpty) {
                             return Colors.white; // Enabled
                           }
                           return Colors.grey; // Disabled
@@ -1063,8 +1088,9 @@ class _InterestSchoolAutismState extends State<InterestSchoolAutism> {
                         ),
                       ),
                     ),
-                    onPressed: (selectedInterestLevel1 != null && selectedInterestLevel2 != null && selectedInterestLevel3 != null) ?
-                    _saveInterestsToFirestore : null, // Enable or disable the button based on the selection
+                    onPressed: (selectedInterestsLevel1.isNotEmpty && selectedInterestsLevel2.isNotEmpty && selectedInterestsLevel3.isNotEmpty)
+                        ? _saveInterestsToFirestore
+                        : null, // Enable or disable the button based on the selection
                     child: const Text(
                       'Suivant',
                       style: TextStyle(fontSize: 20, color: Colors.black),
@@ -1080,7 +1106,7 @@ class _InterestSchoolAutismState extends State<InterestSchoolAutism> {
                         backgroundColor: MaterialStateProperty.all<Color>(
                             ColorConstants.blueDark),
                         shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                        MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                               side: BorderSide(color: Colors.white)),
