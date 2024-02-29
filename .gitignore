@@ -73,8 +73,9 @@ ios/build/*
 *.perspectivev3
 xcuserdata/
 
-# Other ignored platforms
+# Other ignored platforms & files
 macos/
 linux/
 windows/
 web/
+screenshots/
