@@ -1,6 +1,6 @@
 # Workwise Autism
 
-## À propos du Projet
+## À propos du projet
 Workwise Autism est une application mobile dédiée à faciliter les connexions et les opportunités pour les personnes avec autisme. Ce réseau social innovant permet aux utilisateurs de se connecter avec d'autres ayant des profils similaires et de découvrir des opportunités professionnelles adaptées à leurs compétences et intérêts.
 
 ## Fonctionnalités
@@ -9,6 +9,6 @@ Workwise Autism est une application mobile dédiée à faciliter les connexions 
 - **Profil personnalisé** : Les utilisateurs peuvent créer des profils mettant en avant leurs compétences et centres d'intérêt.
 - **Sécurité et confidentialité** : Assure une expérience sûre et respectueuse pour tous les utilisateurs.
 
-## Technologies Utilisées
+## Technologies utilisées
 - **Flutter** : Un framework UI pour créer des applications mobiles magnifiquement conçues.
 - **Firebase** : Pour l'authentification des utilisateurs, le stockage de données, et plus encore.
